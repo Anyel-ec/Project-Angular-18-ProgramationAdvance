@@ -1,0 +1,53 @@
+.upload-receipt {
+  text-align: center;
+  margin: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input[type="file"] {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+  }
+
+  .file-preview {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+
+    img {
+      max-width: 50%; 
+      height: auto;
+      border-radius: 8px;
+    }
+
+    embed {
+      width: 50%; 
+      height: 300px; 
+      border-radius: 8px;
+    }
+  }
+}
