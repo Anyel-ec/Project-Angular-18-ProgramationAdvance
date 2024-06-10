@@ -1,1 +1,100 @@
-<p>registration-form works!</p>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="col-md-8">
+    <form (ngSubmit)="save($event)" [formGroup]="form" class="p-4 border rounded bg-light">
+      <h1 class="titulo text-center mb-4">Formulario de Inscripción a Fuerzas Armadas</h1>
+
+      <div class="form-group">
+        <label>Cédula*:</label>
+        <input type="text" class="form-control" formControlName="cedula">
+        <small *ngIf="form.get('cedula')?.hasError('required') && form.get('cedula')?.touched" class="text-danger">
+          El campo es obligatorio
+        </small>
+        <small *ngIf="form.get('cedula')?.hasError('cedulaInvalida') && form.get('cedula')?.touched"
+          class="text-danger">
+          Cédula inválida
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre Completo*:</label>
+        <input type="text" class="form-control" formControlName="nombreCompleto">
+        <small *ngIf="form.get('nombreCompleto')?.hasError('required') && form.get('nombreCompleto')?.touched"
+          class="text-danger">
+          El campo es obligatorio
+        </small>
+        <small *ngIf="form.get('nombreCompleto')?.hasError('minlength') && form.get('nombreCompleto')?.touched"
+          class="text-danger">
+          El nombre debe tener al menos 3 caracteres
+        </small>
+        <small *ngIf="form.get('nombreCompleto')?.hasError('maxlength') && form.get('nombreCompleto')?.touched"
+          class="text-danger">
+          El nombre no puede exceder los 100 caracteres
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Fecha de Nacimiento*:</label>
+        <input type="date" class="form-control" formControlName="fechaNacimiento">
+        <small *ngIf="form.get('fechaNacimiento')?.hasError('required') && form.get('fechaNacimiento')?.touched"
+          class="text-danger">
+          El campo es obligatorio
+        </small>
+        <small *ngIf="form.get('fechaNacimiento')?.hasError('edadMinima') && form.get('fechaNacimiento')?.touched"
+          class="text-danger">
+          Debe tener al menos 18 años
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Género*:</label>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="generoMasculino" formControlName="genero" value="masculino">
+          <label class="form-check-label" for="generoMasculino">Masculino</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="generoFemenino" formControlName="genero" value="femenino">
+          <label class="form-check-label" for="generoFemenino">Femenino</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="generoOtro" formControlName="genero" value="otro">
+          <label class="form-check-label" for="generoOtro">Otro</label>
+        </div>
+        <small *ngIf="form.get('genero')?.hasError('required') && form.get('genero')?.touched" class="text-danger">
+          El campo es obligatorio
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Provincia*:</label>
+        <select class="form-control" formControlName="provincia">
+          <option value="">Seleccione una provincia</option>
+          <option *ngFor="let provincia of provincias" [value]="provincia">{{provincia}}</option>
+        </select>
+        <small *ngIf="form.get('provincia')?.hasError('required') && form.get('provincia')?.touched"
+          class="text-danger">
+          El campo es obligatorio
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Tipo de Comando*:</label>
+        <select class="form-control" formControlName="tipoComando">
+          <option value="">Seleccione un comando</option>
+          <option value="Policia Nacional">Policía Nacional</option>
+          <option value="Policia de Transito">Policía de Tránsito</option>
+          <option value="Bombero">Bombero</option>
+          <option value="Militar">Militar</option>
+          <option value="Marin">Marin</option>
+        </select>
+        <small *ngIf="form.get('tipoComando')?.hasError('required') && form.get('tipoComando')?.touched"
+          class="text-danger">
+          El campo es obligatorio
+        </small>
+      </div>
+
+      <div class="form-group mt-3 text-center">
+        <button class="btn btn-primary" [disabled]="form.invalid" type="submit">ENVIAR</button>
+      </div>
+    </form>
+  </div>
+</div>
