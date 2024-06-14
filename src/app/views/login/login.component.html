@@ -1,44 +1,55 @@
-<app-nav class="nav-bar" id="navbar"></app-nav>
+<div id="header">
+    <app-nav class="nav-bar" id="navbar"></app-nav>
+</div>
 
-<form action="" class="login-form" autocomplete="off">
-    <div class="login-content">
-        <div class="form-item">
-            <label for="username">Enter Username</label>
-            <input type="text" name="username" id="username" placeholder="username">
+<div class="container" id="home">
+    <div class="login-left">
+        <div class="login-header">
+            <h1>Welcome</h1>
+            <p>Please login to continue......</p>
         </div>
-        <div class="form-item">
-            <label for="password">Enter Password</label>
-            <input type="password" name="" id="password" placeholder="password" class="pass-key">
-            <img src="/src/app/images/eye-close.png" id="eyeicon" class="password-toogle">
-            <!-- <span class="show">Show</span> -->
-        </div>
-        <div class="form-item">
-            <div class="checkbox">
-                <input type="checkbox" name="checkbox" id="rememberMeCheckbox" checked>
-                <label for="rememberMeCheckbox" class="checkboxlabel">Remember Me</label>
+        <form action="" class="login-form" autocomplete="off">
+            <div class="login-content">
+                <div class="form-item">
+                    <label for="email">Enter Email</label>
+                    <input type="email" name="" id="" placeholder="example@email.com">
+                </div>
+                <div class="form-item">
+                    <label for="password">Enter Password</label>
+                    <label for="text"></label>
+                    <input type="password" name="" id="password" placeholder="Enter your Password" required class="pass-key">
+                    <img src="eye-close.png" id="eyeicon" class="password-toggle">
+                    <!-- <span class="show">Show</span> -->
+                </div>
+                <div class="form-item">
+                    <div class="checkbox">
+                        <input type="checkbox" name="" id="rememberMeCheckbox" checked>
+                        <label for="rememberMeCheckbox" class="checkboxlabel">Remember Me</label>
+                    </div>
+                </div>
+                <div class="remember-forgot">
+                    <a href="#">Forgot password?</a>
+                </div>
+
+                <div class="bg-grey">
+                    <div class="sing-up">Don't have an account? <a href=""class="text-link" id="sign-up" >Sign up</a></div>
+                    <!--<a href="#register" class="link-register">Sign Up</a>-->
+                </div>
+
+                <button type="submit">LogIn</button>
             </div>
-        </div>
-        <div class="remember-forgot">
-            <a [routerLink]="[ '/' ]" routerLinkActive="active">Forgot Password?</a>
-        </div>
-        <button type="submit">LogIn</button>
+            <div class="login-footer">
+                <a href="">
+                    <img width="30" src="https://img.icons8.com/color/512/facebook-new.png" alt="facebook">Facebook
+                </a>
+                <a href="">
+                    <img width="30" src="https://img.icons8.com/fluency/512/google-logo.png" alt="google">Google
+                </a>
+            </div>
+        </form>
     </div>
-</form>
-
+    <div class="login-right">
+        <img src="images/Data Arranging_Two Color.svg" alt="">
+    </div>
+</div>
 <app-footer></app-footer>
-
-<script>
-    let eyeicon = document.getElementById("eyeicon");
-    let password = document.getElementById("password");
-
-    eyeicon.onclick = function() {
-        if (password.type == "password"){
-            password.type = "text"; 
-            eyeicon.src = "/src/app/images/eye-open.png";
-        }else{
-            password.type = "password";
-            eyeicon.src = "/src/app/images/eye-close.png";
-        }
-    } 
-</script>
-<script src="/src/app/scripts/index.js"></script>
