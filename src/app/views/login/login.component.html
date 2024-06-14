@@ -1,2 +1,44 @@
 <app-nav class="nav-bar" id="navbar"></app-nav>
+
+<form action="" class="login-form" autocomplete="off">
+    <div class="login-content">
+        <div class="form-item">
+            <label for="username">Enter Username</label>
+            <input type="text" name="username" id="username" placeholder="username">
+        </div>
+        <div class="form-item">
+            <label for="password">Enter Password</label>
+            <input type="password" name="" id="password" placeholder="password" class="pass-key">
+            <img src="/src/app/images/eye-close.png" id="eyeicon" class="password-toogle">
+            <!-- <span class="show">Show</span> -->
+        </div>
+        <div class="form-item">
+            <div class="checkbox">
+                <input type="checkbox" name="checkbox" id="rememberMeCheckbox" checked>
+                <label for="rememberMeCheckbox" class="checkboxlabel">Remember Me</label>
+            </div>
+        </div>
+        <div class="remember-forgot">
+            <a [routerLink]="[ '/' ]" routerLinkActive="active">Forgot Password?</a>
+        </div>
+        <button type="submit">LogIn</button>
+    </div>
+</form>
+
 <app-footer></app-footer>
+
+<script>
+    let eyeicon = document.getElementById("eyeicon");
+    let password = document.getElementById("password");
+
+    eyeicon.onclick = function() {
+        if (password.type == "password"){
+            password.type = "text"; 
+            eyeicon.src = "/src/app/images/eye-open.png";
+        }else{
+            password.type = "password";
+            eyeicon.src = "/src/app/images/eye-close.png";
+        }
+    } 
+</script>
+<script src="/src/app/scripts/index.js"></script>
