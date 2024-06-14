@@ -1,13 +1,5 @@
 <div class="upload-receipt">
   <h2>Por favor, adjunte comprobante de pago</h2>
-  <form (ngSubmit)="onSubmit()">
-    <input
-      type="file"
-      (change)="onFileSelected($event)"
-      accept=".pdf,image/*"
-    />
-    <button type="submit">Subir</button>
-  </form>
   <div *ngIf="fileUrl" class="file-preview">
     <ng-container *ngIf="isImage; else pdfTemplate">
       <img [src]="fileUrl" alt="Vista previa de la imagen" />
@@ -21,4 +13,12 @@
       />
     </ng-template>
   </div>
+  <form (ngSubmit)="onSubmit()">
+    <input
+      type="file"
+      (change)="onFileSelected($event)"
+      accept=".pdf,image/*"
+    />
+    <button type="submit">Subir</button>
+  </form>
 </div>

@@ -33,21 +33,17 @@
 
   .file-preview {
     margin-top: 20px;
-    border: 1px solid #ccc;
     padding: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-
+    border: none;
+    
     img {
-      max-width: 50%; 
+      max-width: 70%; 
       height: auto;
-      border-radius: 8px;
     }
 
     embed {
-      width: 50%; 
-      height: 300px; 
-      border-radius: 8px;
+      width: 60%; 
+      height: 500px; 
     }
   }
 }
