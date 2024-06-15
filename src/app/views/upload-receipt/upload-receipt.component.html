@@ -1,24 +1,50 @@
-<div class="upload-receipt">
-  <h2>Por favor, adjunte comprobante de pago</h2>
-  <div *ngIf="fileUrl" class="file-preview">
-    <ng-container *ngIf="isImage; else pdfTemplate">
-      <img [src]="fileUrl" alt="Vista previa de la imagen" />
-    </ng-container>
-    <ng-template #pdfTemplate>
-      <embed
-        [src]="fileUrl"
-        type="application/pdf"
-        width="100%"
-        height="600px"
-      />
-    </ng-template>
+<div class="upload">
+  <div class="upload-receipt">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label>
+        <img
+          *ngIf="!fileUrl"
+          src="https://cdn-icons-png.freepik.com/512/88/88635.png"
+          alt="Icono de comprobante de pago"
+          class="upload-icon"
+        />
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          accept=".pdf,image/*"
+          formControlName="file"
+          class="file-input"
+        />
+      </label>
+      <div *ngIf="fileUrl" class="file-preview">
+        <ng-container *ngIf="isImage; else pdfTemplate">
+          <img
+            [src]="fileUrl"
+            alt="Vista previa de la imagen"
+            class="preview-image"
+          />
+          <button type="button" class="close-btn" (click)="clearFile()">
+            ✖
+          </button>
+        </ng-container>
+        <ng-template #pdfTemplate>
+          <embed
+            [src]="fileUrl"
+            type="application/pdf"
+            width="100%"
+            height="100%"
+            class="preview-pdf"
+          />
+          <button type="button" class="close-btn_2" (click)="clearFile()">
+            ✖
+          </button>
+        </ng-template>
+      </div>
+
+      <p>Por favor, adjunte comprobante de pago</p>
+      <div class="submit-button-container">
+        <button type="submit" class="submit-button">Enviar</button>
+      </div>
+    </form>
   </div>
-  <form (ngSubmit)="onSubmit()">
-    <input
-      type="file"
-      (change)="onFileSelected($event)"
-      accept=".pdf,image/*"
-    />
-    <button type="submit">Subir</button>
-  </form>
 </div>
