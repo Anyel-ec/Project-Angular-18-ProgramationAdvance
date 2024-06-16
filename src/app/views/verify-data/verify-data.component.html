@@ -1,0 +1,64 @@
+<div class="  container mt-4" >
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Cédula</th>
+          <th>Nombre Completo</th>
+          <th>Género</th>
+          <th>Provincia</th>
+          <th>Tipo de Comando</th>
+          <th>Estado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of dataSource.data; let isFirstRow = first">
+          <td>{{ element.cedula }}</td>
+          <td>{{ element.nombreCompleto }}</td>
+          <td>{{ element.genero }}</td>
+          <td>{{ element.provincia }}</td>
+          <td>{{ element.tipoDeComando }}</td>
+          <td [ngClass]="{'first-row': isFirstRow}">
+            <div class="estado-container" [ngStyle]="{'background-color': getEstadoColor(element.estado)}">
+              <select [(ngModel)]="element.estado" class="form-control">
+                <option *ngFor="let estado of estados" [ngValue]="estado.value">{{ estado.value }}</option>
+              </select>
+            </div>
+          </td>
+          <td class="text-center">
+            <button type="button" class="btn btn-sm btn-success mx-1" *ngIf="element.estado === 'APROBADO'" title="Visto">
+              <i class="bi bi-check-circle"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-danger mx-1" *ngIf="element.estado === 'NO APROBADO'" title="Eliminar">
+              <i class="bi bi-x-circle"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-warning mx-1" *ngIf="element.estado === 'PENDIENTE'" title="Pendiente">
+              <i class="bi bi-info"></i>
+            </button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
