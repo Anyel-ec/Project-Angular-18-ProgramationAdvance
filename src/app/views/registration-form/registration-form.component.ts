@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormControl, Validators, FormsModule, FormGroup, FormBuilder, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule],
+  providers: [FormBuilder],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss']
 })
@@ -43,6 +45,15 @@ export class RegistrationFormComponent implements OnInit {
       notaGrado: ['', [Validators.required, Validators.min(0), Validators.max(20), this.validarNotaGrado]]
     });
   }
+
+
+  captchaValid: boolean = false;
+
+  // Metodo para validar el captcha de Google
+  resolved(captchaResponse: string | null) {
+    this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
+  }
+
   private validarNombreCompleto(control: AbstractControl): ValidationErrors | null {
     const nombre = control.value;
     if (!nombre) {
