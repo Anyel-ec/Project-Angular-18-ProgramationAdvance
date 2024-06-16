@@ -1,15 +1,19 @@
 <!-- nav.component.html -->
-<ul>
-    <li>
-        <a [routerLink]="[ '/registro-aspirantes' ]" routerLinkActive="active">Inicio</a>
-    </li>
-    <li>
-        <a [routerLink]="[ '/login' ]" routerLinkActive="active">Page1</a>
-    </li>
-    <li>
-        <a [routerLink]="[ '/login' ]" routerLinkActive="active">Page3</a>
-    </li>
-    <li>
-        <a class="navlogin" [routerLink]="[ '/login' ]" routerLinkActive="active">Iniciar Sesión</a>
-    </li>
-</ul>
+
+<header id="header">
+    <div class="logo">
+        <a [routerLink]="['/registro-aspirantes']" routerLinkActive="active">Minimal</a>
+    </div>
+
+    <nav class="nav-bar" [class.active]="isNavActive" id="navbar">
+        <ul>
+            <li><a [routerLink]="['/registro-aspirantes']" routerLinkActive="active">Inicio</a></li>
+            <li><a [routerLink]="['/login']" routerLinkActive="active">Products</a></li>
+            <li><a [routerLink]="['/login']" routerLinkActive="active">About Us</a></li>
+            <li><a [routerLink]="['/login']" routerLinkActive="active">Contact</a></li>
+            <div class="login" id="login">
+                <li><a [routerLink]="['/login']" routerLinkActive="active" class="navlogin">Iniciar Sesión</a></li>
+            </div>
+        </ul>
+    </nav>
+</header>

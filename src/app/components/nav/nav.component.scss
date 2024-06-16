@@ -1,0 +1,114 @@
+header {
+    width: 100%;
+    height: 80px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 100px;
+    padding-top: 2px;
+
+    .logo a {
+        font-size: 30px;
+        font-weight: bold;
+        color: black;
+    }
+
+    .hamburger {
+        display: none;
+        cursor: pointer;
+
+        .line {
+            width: 30px;
+            height: 3px;
+            background: black;
+            margin: 6px 0;
+            cursor: pointer;
+        }
+    }
+
+    .nav-bar {
+        ul {
+            display: flex;
+
+            li {
+                a {
+                    display: block;
+                    color: black;
+                    font-size: 20px;
+                    padding: 10px 25px;
+                    border-radius: 50px;
+                    transition: .2s;
+
+                    &:hover {
+                        color: black;
+                        background: #eee;
+                    }
+
+                    &.active {
+                        background-color: #eee;
+                    }
+
+                    &.navlogin {
+                        color: #eee;
+                        background-color: #11101b;
+                        transition: .5s;
+
+                        &:hover {
+                            background-color: #eee;
+                            color: black;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.active {
+            height: 800px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .hamburger {
+            display: block;
+            z-index: 99999;
+        }
+
+        .nav-bar {
+            height: 0;
+            position: absolute;
+            top: 90px;
+            left: 0;
+            right: 0;
+            width: 100vw;
+            z-index: 999;
+            transition: .5;
+            overflow: hidden;
+
+            ul {
+                display: block;
+                width: fit-content;
+                margin: 160px auto 0 auto;
+                text-align: center;
+                transition: .5s;
+                opacity: 0;
+
+                li {
+                    a {
+                        display: block;
+                        color: black;
+                        margin-top: 40px;
+                        font-size: 25px;
+                        font-weight: 900;
+                        margin-bottom: 12px;
+                    }
+                }
+
+                &.active {
+                    opacity: 1;
+                    transition: .5;
+                }
+            }
+        }
+    }
+}
