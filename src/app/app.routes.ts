@@ -31,6 +31,13 @@ export const routes: Routes = [
     path: '**', component: PageNotFoundComponent
   },
 
+  {
+    path: 'verify-data',
+   component: VerifyDataComponent
+ }
+
+
+
 ];
 
 @NgModule({
