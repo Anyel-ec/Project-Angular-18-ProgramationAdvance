@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './verify-data.component.scss'
 })
 export class VerifyDataComponent {
-  linkSubida: string = '/upload-receipt';
+  linkSubida: string = '/subir-recibo';
 }

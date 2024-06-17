@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './end-process-denied.component.scss'
 })
 export class EndProcessDeniedComponent {
-
+  linkSubida: string = '/subir-recibo';
 }
