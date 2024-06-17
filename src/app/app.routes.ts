@@ -13,48 +13,33 @@ import { EndProcessDeniedComponent } from './emails/end-process-denied/end-proce
 
 export const routes: Routes = [
   {
-    path: 'subir-recibo',
-    component: UploadReceiptComponent,
+    path: 'subir-recibo', component: UploadReceiptComponent,
   },
   {
-    path: 'verificar-pagos',
-    component: VerifyPaymentsComponent,
+    path: 'verificar-pagos', component: VerifyPaymentsComponent,
   },
   {
-    path: 'registro-aspirantes',
-
-    component: RegistrationFormComponent
+    path: 'registro-aspirantes', component: RegistrationFormComponent
   },
   /*
   {
-    path: 'email-registro-datos',
-
-    component: RegistrationFormComponent
+    path: 'email-registro-datos', component: RegistrationFormComponent
   },
   */
   {
-    path: 'email-datos-aceptados',
-
-    component: VerifyDataComponent
+    path: 'email-datos-aceptados', component: VerifyDataComponent
   },
   {
-    path: 'email-datos-rechazados',
-
-    component: VerifyDataDeniedComponent
+    path: 'email-datos-rechazados', component: VerifyDataDeniedComponent
   },
   {
-    path: 'email-comprobante-aceptado',
-
-    component: EndProcessComponent
+    path: 'email-comprobante-aceptado', component: EndProcessComponent
   },
   {
-    path: 'email-comprobante-rechazado',
-
-    component: EndProcessDeniedComponent
+    path: 'email-comprobante-rechazado', component: EndProcessDeniedComponent
   },
   {
-    path: 'login',
-    component: LoginComponent
+    path: 'login', component: LoginComponent
   },
   {
     path: '', redirectTo: '/registro-aspirantes', pathMatch: 'full'
