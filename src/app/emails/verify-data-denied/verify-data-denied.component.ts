@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './verify-data-denied.component.scss'
 })
 export class VerifyDataDeniedComponent {
-
+  linkRegistro: string = '/registro-aspirantes';
 }

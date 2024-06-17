@@ -1,0 +1,23 @@
+$email-bg-color: #000;
+$email-text-color: #ffd700;
+$email-link-color: #ffd700;
+$email-link-hover-color: #000;
+
+.email-container{
+    background-color: $email-bg-color;
+    color: $email-text-color;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.email-link{
+    color: $email-link-color;
+    text-decoration: none;
+    &:hover{
+        color: $email-link-hover-color;
+        background-color: $email-link-color;
+        padding: 2px 5px;
+        cursor: pointer;
+    }
+}
