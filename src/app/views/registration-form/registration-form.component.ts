@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormControl, Validators, FormsModule, FormGroup, FormBuilder, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule],
+  providers: [FormBuilder],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss']
 })
@@ -22,19 +24,101 @@ export class RegistrationFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.buildForm();
+
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+
+  }
 
   private buildForm() {
     this.form = this.formBuilder.group({
       cedula: new FormControl('', [Validators.required, this.validarCedulaEcuatoriana]),
-      nombreCompleto: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
+      nombreCompleto: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.validarNombreCompleto]),
       fechaNacimiento: new FormControl('', [Validators.required, this.validarEdadMinima(18)]),
       genero: new FormControl('', [Validators.required]),
       provincia: new FormControl('', [Validators.required]),
-      tipoComando: new FormControl('', [Validators.required])
+      tipoComando: new FormControl('', [Validators.required]),
+      telefono: ['', [Validators.required, Validators.pattern('[0-9]*'), this.validarNumeroCelular]],
+      correoElectronico: ['', [Validators.required, Validators.email, this.validarCorreoElectronico]],
+      direccion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
+      notaGrado: ['', [Validators.required, Validators.min(0), Validators.max(20), this.validarNotaGrado]]
     });
+  }
+
+
+  captchaValid: boolean = false;
+
+  // Metodo para validar el captcha de Google
+  resolved(captchaResponse: string | null) {
+    this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
+  }
+
+  private validarNombreCompleto(control: AbstractControl): ValidationErrors | null {
+    const nombre = control.value;
+    if (!nombre) {
+      return null;
+    }
+
+    if (nombre.length < 3) {
+      return { nombreInvalido: true };
+    }
+    // Expresión regular para tildes y texto en latam para validar nombres completos no permitir numeros o signos
+    const expresionRegular = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\u0020\u0027\u002E\u002D]*$/;
+    if (expresionRegular.test(nombre)) {
+      return null;
+    } else {
+      return { nombreInvalido: true };
+    }
+
+    return null;
+  }
+
+  private validarNotaGrado(control: AbstractControl): ValidationErrors | null {
+    const nota = control.value;
+    if (!nota) {
+      return null;
+    }
+
+    if (nota < 0 || nota > 20) {
+      return { notaGradoInvalida: true };
+    }
+
+    return null;
+  }
+
+  private validarCorreoElectronico(control: AbstractControl): ValidationErrors | null {
+    const correo = control.value;
+    if (!correo) {
+      return null;
+    }
+
+    const expresionRegular = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (expresionRegular.test(correo)) {
+      return null;
+    } else {
+      return { correoInvalido: true };
+    }
+  }
+
+  private validarNumeroCelular(control: AbstractControl): ValidationErrors | null {
+    const telefono = control.value;
+    if (!telefono) {
+      return null;
+    }
+
+    if (telefono.length !== 10) {
+      return { telefonoInvalido: true };
+    }
+
+    const primerosDigitos = telefono.substring(0, 2);
+    if (primerosDigitos !== '09' && primerosDigitos !== '08') {
+      return { telefonoInvalido: true };
+    }
+
+
+
+    return null;
   }
 
   private validarCedulaEcuatoriana(control: AbstractControl): ValidationErrors | null {
@@ -95,6 +179,26 @@ export class RegistrationFormComponent implements OnInit {
         return { edadMinima: true };
       }
     };
+  }
+  // Métodos para obtener errores de validación específicos
+  getError(controlName: string, errorType: string) {
+    const control = this.form.get(controlName);
+    return control?.hasError(errorType) && control?.touched;
+  }
+
+  isInvalid(controlName: string) {
+    const control = this.form.get(controlName);
+    return control?.invalid && control?.touched;
+  }
+
+  isValid(controlName: string) {
+    const control = this.form.get(controlName);
+    return control?.valid && control?.touched;
+  }
+
+  markAsTouched(controlName: string): void {
+    const control = this.form.get(controlName);
+    control?.markAsTouched();
   }
 
   save(event: Event) {

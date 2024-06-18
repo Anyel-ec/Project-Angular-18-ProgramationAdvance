@@ -1,3 +1,4 @@
+
 body, html {
   height: 90%;
   margin: 0;
@@ -10,4 +11,24 @@ body, html {
 .titulo {
   font-size: 1.5em;
   font-weight: bold;
+}
+
+.is-invalid {
+  background-color: #f8d7daba; /* Fondo rojo claro */
+  border-color: #df4655;
+}
+
+.is-valid {
+  background-color: #d4eddab0; /* Fondo verde claro */
+  border-color: #2adf54;
+}
+
+.form-check {
+  display: flex; /* Arrange checkbox and label in a row */
+  align-items: center; /* Align checkbox and label vertically */
+  margin-bottom: 30px; /* Add some spacing between checkboxes */
+}
+
+.form-check-input {
+  margin-right: 100px; /* Add spacing between checkbox and label */
 }
