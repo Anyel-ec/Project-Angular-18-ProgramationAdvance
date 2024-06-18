@@ -52,15 +52,16 @@
         <td style="text-align: center">{{ rowData.provincia }}</td>
         <td style="text-align: center">{{ rowData.tipoCurso }}</td>
         <td style="text-align: center">
-          <p-tag *ngIf="rowData.aceptado" icon="pi pi-check" severity="success" value="Aceptado"></p-tag>
-          <p-tag *ngIf="!rowData.aceptado" icon="pi pi-times" severity="danger" value="Rechazado"></p-tag>
+          <p-tag *ngIf="rowData.estado === 'Aceptado'" icon="pi pi-check" severity="success" value="Aceptado"></p-tag>
+          <p-tag *ngIf="rowData.estado === 'Rechazado'" icon="pi pi-times" severity="danger" value="Rechazado"></p-tag>
+          <p-tag *ngIf="rowData.estado === 'Pendiente'" icon="pi pi-clock" severity="warning" value="Pendiente"></p-tag>
         </td>
         <td style="text-align: center">
-          <button class="btn_success" (click)="aceptar(rowData)">
+          <button class="btn_success" (click)="aceptar(rowData)" [disabled]="rowData.estado !== 'Pendiente'">
             <p-tag icon="pi pi-check" severity="success" value="Aceptar"></p-tag>
           </button>
 
-          <button class="btn_danger" (click)="rechazar(rowData)">
+          <button class="btn_danger" (click)="rechazar(rowData)" [disabled]="rowData.estado !== 'Pendiente'">
             <p-tag icon="pi pi-times" severity="danger" value="Rechazar"></p-tag>
           </button>
         </td>
@@ -68,21 +69,3 @@
     </ng-template>
   </p-table>
 </div>
-
-<p-dialog
-  header="Comprobante de Pago"
-  [modal]="true"
-  [(visible)]="Comprobante"
-  [style]="{ width: '50rem' }"
-  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-  [draggable]="false"
->
-  <div class="dialog-content-center">
-    <p-image
-      src="https://getquipu.com/wp-content/uploads/2021/10/02155904/plantilla-de-excel-recibo-de-pago-1.png"
-      alt="Image"
-      width="250"
-      [preview]="true"
-    ></p-image>
-  </div>
-</p-dialog>

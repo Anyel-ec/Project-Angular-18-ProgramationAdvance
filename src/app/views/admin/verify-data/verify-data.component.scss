@@ -68,3 +68,13 @@
 td, th {
   padding: 1rem; // Esto agrega un poco de espacio alrededor del contenido de cada celda
 }
+
+button:disabled {
+  opacity: 0.5; /* Reduce la opacidad del botón deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor cuando pasa sobre un botón deshabilitado */
+}
+
+button.disabled {
+  opacity: 0.5; /* Aplica la misma opacidad a los botones que tienen la clase .disabled */
+  cursor: not-allowed; /* Cambia el cursor cuando pasa sobre un botón con la clase .disabled */
+}

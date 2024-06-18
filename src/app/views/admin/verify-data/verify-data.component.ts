@@ -9,7 +9,7 @@ interface Curso {
   genero: string;
   provincia: string;
   tipoCurso: string;
-  aceptado?: boolean; // Nueva propiedad
+  estado: string; // Nueva propiedad
 }
 
 @Component({
@@ -30,6 +30,7 @@ export class VerifyDataComponent implements OnInit {
       genero: 'Masculino',
       provincia: 'Pichincha',
       tipoCurso: 'Policia Nacional',
+      estado: 'Pendiente', // Estado inicial
     },
     {
       id: 2,
@@ -38,6 +39,7 @@ export class VerifyDataComponent implements OnInit {
       genero: 'Femenino',
       provincia: 'Guayas',
       tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente', // Estado inicial
     },
     // Agrega más datos según sea necesario
   ];
@@ -96,7 +98,7 @@ export class VerifyDataComponent implements OnInit {
           text: "Se emitirá el correo de confirmación al aspirante.",
           icon: "success"
         });
-        rowData.aceptado = true; // Actualiza el estado del aspirante
+        rowData.estado = 'Aceptado'; // Actualiza el estado del aspirante
       }
     });
   }
@@ -118,7 +120,7 @@ export class VerifyDataComponent implements OnInit {
           text: "Se emitirá el correo al aspirante.",
           icon: "success"
         });
-        rowData.aceptado = false; // Actualiza el estado del aspirante
+        rowData.estado = 'Rechazado'; // Actualiza el estado del aspirante
       }
     });
   }
