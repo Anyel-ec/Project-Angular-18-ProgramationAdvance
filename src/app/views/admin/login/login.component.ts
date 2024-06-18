@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { NavComponent } from '../../components/nav/nav.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { RouterLink, Router } from '@angular/router';
 import { Validators, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -36,7 +34,7 @@ export class LoginComponent{
     if (this.loginForm.valid) {
       const { username, password} = this.loginForm.value;
       if(username === this.validUsername && password === this.validPassword){
-        this.router.navigate(['/'])
+        this.router.navigate(['/verificar-registros'])
       } else {
         alert('Usuario o Contraseña Invalidos');
       }

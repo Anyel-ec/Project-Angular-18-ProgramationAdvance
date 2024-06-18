@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UPLOAD_IMPORTS } from '../end-process/importsModule';
+import { UPLOAD_IMPORTS } from './importsModule';
 import Swal from 'sweetalert2';
 
 interface Curso {
@@ -16,9 +16,9 @@ interface Curso {
   standalone: true,
   imports: [UPLOAD_IMPORTS],
   templateUrl: './end-process.component.html',
-  styleUrl: './end-process.component.scss'
+  styleUrl: './end-process.component.scss',
 })
-export class EndProcessComponent implements OnInit{
+export class EndProcessComponent implements OnInit {
   data: Curso[] = [
     {
       id: 1,
@@ -148,27 +148,27 @@ export class EndProcessComponent implements OnInit{
     console.log('Aceptar:', rowData);
     if (rowData.pagado) {
       Swal.fire({
-        title: "Pago realizado",
-        text: "El aspirante ya ha realizado el pago.",
-        icon: "info"
+        title: 'Pago realizado',
+        text: 'El aspirante ya ha realizado el pago.',
+        icon: 'info',
       });
       return;
     }
 
     Swal.fire({
-      title: "Estas seguro?",
-      text: "Se aceptará el pago del aspirante.",
-      icon: "warning",
+      title: 'Estas seguro?',
+      text: 'Se aceptará el pago del aspirante.',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Aceptar"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar',
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: "Pago aceptado",
-          text: "Se emitira el correo de confirmación al aspirante.",
-          icon: "success"
+          title: 'Pago aceptado',
+          text: 'Se emitira el correo de confirmación al aspirante.',
+          icon: 'success',
         });
         rowData.pagado = true;
       }
@@ -179,31 +179,29 @@ export class EndProcessComponent implements OnInit{
     console.log('Declinar:', rowData);
     if (!rowData.pagado) {
       Swal.fire({
-        title: "Sin pago",
-        text: "El aspirante no ha realizado el pago.",
-        icon: "info"
+        title: 'Sin pago',
+        text: 'El aspirante no ha realizado el pago.',
+        icon: 'info',
       });
       return;
     }
     Swal.fire({
-      title: "Estas seguro?",
-      text: "Se rechazara el pago del aspirante.",
-      icon: "warning",
+      title: 'Estas seguro?',
+      text: 'Se rechazara el pago del aspirante.',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Rechazar"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Rechazar',
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: "Pago rechazado",
-          text: "Se emitira el correo al aspirante.",
-          icon: "success"
+          title: 'Pago rechazado',
+          text: 'Se emitira el correo al aspirante.',
+          icon: 'success',
         });
         rowData.pagado = false;
       }
     });
-
   }
-
 }

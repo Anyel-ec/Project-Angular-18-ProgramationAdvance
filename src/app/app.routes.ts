@@ -1,11 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
-import { UploadReceiptComponent } from './views/upload-receipt/upload-receipt.component';
-import { RegistrationFormComponent } from './views/registration-form/registration-form.component';
+import { UploadReceiptComponent } from './views/user/upload-receipt/upload-receipt.component';
+import { RegistrationFormComponent } from './views/user/registration-form/registration-form.component';
 import { NgModule } from '@angular/core';
-import { LoginComponent } from './views/login/login.component';
-import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
-import { EndProcessComponent } from './views/end-process/end-process.component';
-import { VerifyDataComponent } from './views/verify-data/verify-data.component';
+import { PageNotFoundComponent } from './views/admin/page-not-found/page-not-found.component';
+import { EndProcessComponent } from './views/admin/end-process/end-process.component';
+import { VerifyDataComponent } from './views/admin/verify-data/verify-data.component';
+import { LoginComponent } from './views/admin/login/login.component';
 
 export const routes: Routes = [
   {
@@ -17,24 +17,26 @@ export const routes: Routes = [
     component: EndProcessComponent,
   },
   {
-    path: 'verificar-pagos',
+    path: 'verificar-registros',
     component: VerifyDataComponent,
   },
   {
     path: 'registro-aspirantes',
-    component: RegistrationFormComponent
+    component: RegistrationFormComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
-    path: '', redirectTo: '/registro-aspirantes', pathMatch: 'full'
+    path: '',
+    redirectTo: '/registro-aspirantes',
+    pathMatch: 'full',
   },
   {
-    path: '**', component: PageNotFoundComponent
+    path: '**',
+    component: PageNotFoundComponent,
   },
-
 ];
 
 @NgModule({
