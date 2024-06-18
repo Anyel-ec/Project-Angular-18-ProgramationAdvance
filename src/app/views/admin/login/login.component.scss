@@ -4,6 +4,8 @@ $login-text-color: #ffd700;
 $login-button-bg-color: #ffd700;
 $login-button-text-color: #1c1c1c;
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -41,6 +43,7 @@ $login-button-text-color: #1c1c1c;
       border: 1px solid lighten($login-text-color, 20%);
       border-radius: 5px;
       font-size: 1rem;
+      font-family: "Helvetica Neue", Arial, sans-serif;
       background-color: $login-bg-color;
       color: lighten($login-text-color, 20%);
       box-sizing: border-box;
@@ -58,15 +61,17 @@ $login-button-text-color: #1c1c1c;
       .toggle-password {
         position: absolute;
         right: 10px;
-        font-size: 1.2em;
+        font-size: 1rem;
+        font-family: "Helvetica Neue", Arial, sans-serif;
         color: lightten($login-text-color, 20%);
         cursor: pointer;
       }
     }
 
     small {
-      color: red;
+      color: #f8f9fa;
       font-size: 0.8em;
+      font-family: "Helvetica Neue", Arial, sans-serif;
     }
   }
 

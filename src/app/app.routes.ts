@@ -17,7 +17,7 @@ export const routes: Routes = [
   {
     path: 'login-two',
     component: LoginTwoComponent,
-  }, 
+  },
   {
     path: 'informativo',
     component: InfoComponent,
@@ -44,7 +44,7 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: '**',
+    path: 'not',
     component: PageNotFoundComponent,
   },
 ];
