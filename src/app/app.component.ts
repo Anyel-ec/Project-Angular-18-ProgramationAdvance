@@ -6,14 +6,6 @@ import { NavComponent } from './components/nav/nav.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { UploadReceiptComponent } from './views/upload-receipt/upload-receipt.component';
 
-
-@NgModule ({
-  imports: [
-    MatSlideToggleModule,
-
-
-  ]
-})
 @Component({
   selector: 'app-root',
   standalone: true,
