@@ -1,46 +1,42 @@
-
-<div class="container" id="home">
-    <div class="login-left">
-      <div class="login-header">
-        <h1>Bienvenido</h1>
-        <p>Por favor inicie sesión para continuar...</p>
+<!-- src/app/login/login.component.html -->
+<div class="login-container">
+  <div class="card-box">
+    <h2>Iniciar Sesión</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" formControlName="username" required>
+        <div
+          *ngIf="loginForm.controls['username'].invalid && (loginForm.controls['username'].dirty || loginForm.controls['username'].touched)">
+          <small *ngIf="loginForm.controls['username'].errors?.['required']">El usuario es requerido.</small>
+        </div>
       </div>
-      <form class="login-form" autocomplete="off">
-        <div class="login-content">
-          <div class="form-item">
-            <label for="email">Ingrese su usuario</label>
-            <input type="text" id="email" placeholder="username">
-          </div>
-          <div class="form-item">
-            <label for="password">Ingrese su contraseña</label>
-            <input type="password" id="password" placeholder="contraseña" class="pass-key">
-            <img src="eye-close.png" id="eyeicon" class="password-toggle">
-          </div>
-          <div class="form-item">
-            <div class="checkbox">
-              <input type="checkbox" id="rememberMeCheckbox">
-              <label for="rememberMeCheckbox" class="checkboxlabel">Recuérdame</label>
-            </div>
-          </div>
-          <div class="remember-forgot">
-            <a [routerLink]="['/login']" routerLinkActive="active">¿Contraseña Olvidada?</a>
-          </div>
-          <div class="bg-grey">
-            <div class="sing-up">¿Aún no tienes cuenta? <a [routerLink]="['/login']" routerLinkActive="active" class="text-link" id="sign-up">Sign up</a></div>
-          </div>
-          <button type="submit">Iniciar Sesión</button>
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <div class="password-container">
+          <input [type]="hidePassword ? 'password' : 'text'" id="password" formControlName="password" required>
+          <i class="toggle-password" (click)="togglePasswordVisibility()">
+            {{ hidePassword ? '👁️' : '👁️‍🗨️' }}
+          </i>
         </div>
-        <div class="login-footer">
-          <a href="https://www.facebook.com">
-            <img width="30" src="https://img.icons8.com/color/512/facebook-new.png" alt="facebook">Facebook
-          </a>
-          <a href="https://www.google.com">
-            <img width="30" src="https://img.icons8.com/fluency/512/google-logo.png" alt="google">Google
-          </a>
+        <div
+          *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+          <small *ngIf="loginForm.controls['password'].errors?.['required']">La contraseña es requerida.</small>
+          <small *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 6
+            caracteres.</small>
         </div>
-      </form>
-    </div>
-    <div class="login-right">
-      <img src="images/Data Arranging_Two Color.svg" alt="">
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="remember" formControlName="remember">
+        <label for="remember">Recuérdame</label>
+      </div>
+      <div class="form-group">
+        <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
+      </div>
+    </form>
+    <div class="links">
+      <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+      <a href="/register">Crear una cuenta</a>
     </div>
   </div>
+</div>

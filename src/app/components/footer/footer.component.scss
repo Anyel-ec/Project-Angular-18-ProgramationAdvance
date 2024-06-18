@@ -1,0 +1,15 @@
+$bg-color: #1c1c1c;
+$text-color: #ffd700;
+
+footer{
+    background-color: $bg-color;
+    color: $text-color;
+    padding: 1rem 0;
+    text-align: center;
+
+    .footer-content{
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+}

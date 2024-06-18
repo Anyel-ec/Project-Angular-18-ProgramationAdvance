@@ -1,12 +1,11 @@
 <!-- nav.component.html -->
 
 <header id="header">
-    <div class="logo">
-        <a [routerLink]="['/registro-aspirantes']" routerLinkActive="active">Minimal</a>
-    </div>
-
-    <nav class="nav-bar" [class.active]="isNavActive" id="navbar">
-        <ul>
+    <nav class="navbar" [class.active]="isNavActive" id="navbar">
+        <div class="logo">
+            <a [routerLink]="['/']" routerLinkActive="active">Comando ESPE</a>
+        </div>    
+        <ul class="nav-link">
             <li><a [routerLink]="['/registro-aspirantes']" routerLinkActive="active">Inicio</a></li>
             <li><a [routerLink]="['/login']" routerLinkActive="active">Products</a></li>
             <li><a [routerLink]="['/login']" routerLinkActive="active">About Us</a></li>
