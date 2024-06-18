@@ -4,8 +4,8 @@ import { RegistrationFormComponent } from './views/registration-form/registratio
 import { NgModule } from '@angular/core';
 import { LoginComponent } from './views/login/login.component';
 import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
-import { VerifyDataComponent } from './views/verify-data/verify-data.component';
 import { EndProcessComponent } from './views/end-process/end-process.component';
+import { VerifyDataComponent } from './views/verify-data/verify-data.component';
 
 export const routes: Routes = [
   {
@@ -22,7 +22,6 @@ export const routes: Routes = [
   },
   {
     path: 'registro-aspirantes',
-
     component: RegistrationFormComponent
   },
   {
