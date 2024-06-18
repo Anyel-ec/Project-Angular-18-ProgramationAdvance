@@ -34,7 +34,7 @@ export class LoginComponent{
     if (this.loginForm.valid) {
       const { username, password} = this.loginForm.value;
       if(username === this.validUsername && password === this.validPassword){
-        this.router.navigate(['/'])
+        this.router.navigate(['/verificar-registros'])
       } else {
         alert('Usuario o Contraseña Invalidos');
       }

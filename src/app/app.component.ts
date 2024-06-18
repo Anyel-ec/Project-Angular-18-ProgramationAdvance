@@ -5,6 +5,7 @@ import { RegistrationFormComponent } from './views/user/registration-form/regist
 import { NavComponent } from './components/nav/nav.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { UploadReceiptComponent } from './views/user/upload-receipt/upload-receipt.component';
+import { NavAdminComponent } from './components/nav-admin/nav-admin.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { UploadReceiptComponent } from './views/user/upload-receipt/upload-recei
     RegistrationFormComponent,
     NavComponent,
     FooterComponent,
+    NavAdminComponent
   ],
 
   templateUrl: './app.component.html',
@@ -24,12 +26,19 @@ import { UploadReceiptComponent } from './views/user/upload-receipt/upload-recei
 export class AppComponent {
   title = 'project';
   showHeader: boolean = true;
+  isAdmin: boolean = false;
 
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.showHeader = !['/login'].includes(event.urlAfterRedirects);
+        const loginRoute = ['/login'];
+        const adminRoutes = ['/verificar-registros', '/finalizar-proceso'];
+
+        this.showHeader = !loginRoute.includes(event.urlAfterRedirects);
+        this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
       }
     });
   }
+
+
 }

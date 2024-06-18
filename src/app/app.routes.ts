@@ -17,7 +17,7 @@ export const routes: Routes = [
     component: EndProcessComponent,
   },
   {
-    path: 'verificar-pagos',
+    path: 'verificar-registros',
     component: VerifyDataComponent,
   },
   {

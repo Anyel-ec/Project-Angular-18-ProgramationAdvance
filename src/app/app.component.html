@@ -1,4 +1,11 @@
-<app-nav *ngIf="showHeader"></app-nav>
+<ng-container *ngIf="showHeader">
+    <ng-container *ngIf="isAdmin; else defaultNav">
+      <app-nav-admin></app-nav-admin>
+    </ng-container>
+    <ng-template #defaultNav>
+      <app-nav></app-nav>
+    </ng-template>
+  </ng-container>
 <main>
     <router-outlet></router-outlet>
 </main>
