@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { NavComponent } from '../../components/nav/nav.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { RouterLink, Router } from '@angular/router';
 import { Validators, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
