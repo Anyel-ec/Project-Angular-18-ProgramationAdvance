@@ -1,8 +1,8 @@
 :host ::ng-deep .p-menubar {
     display: flex;
     justify-content: center;
-    background-color: inherit; 
-    color: inherit; 
+    background-color: inherit;
+    color: inherit;
 }
 
 :host ::ng-deep .p-menubar .p-menubar-start {
@@ -18,15 +18,15 @@
 }
 
 :host ::ng-deep .p-menubar .p-menuitem-link {
-    color: inherit; 
+    color: inherit;
     display: flex;
     align-items: center;
-    text-decoration: none; 
-    transition: color 0.3s ease, background-color 0.3s ease; 
+    text-decoration: none;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 :host ::ng-deep .p-menubar .p-menuitem-link .pi {
-    color: black; 
+    color: black;
 }
 
 :host ::ng-deep .p-menubar .p-menuitem a.p-menuitem-link:hover {

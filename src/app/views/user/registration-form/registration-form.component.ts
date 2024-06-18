@@ -3,11 +3,12 @@ import { ReactiveFormsModule, FormControl, Validators, FormsModule, FormGroup, F
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import { InfoComponent } from '../info/info.component';
 
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, InfoComponent],
   providers: [FormBuilder],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss']
