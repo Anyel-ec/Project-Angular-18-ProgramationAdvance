@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RegistrationFormComponent } from './views/registration-form/registration-form.component';
 import { NavComponent } from './components/nav/nav.component';
@@ -18,5 +18,13 @@ import { UploadReceiptComponent } from './views/upload-receipt/upload-receipt.co
 export class AppComponent {
 
   title = 'project';
+  showHeader: boolean = true;
 
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.showHeader = !['/login'].includes(event.urlAfterRedirects);
+      }
+    });
+  }
 }

@@ -1,3 +1,124 @@
+/* src/app/login/login.component.scss */
+$login-bg-color: #1c1c1c;
+$login-text-color: #ffd700;
+$login-button-bg-color: #ffd700;
+$login-button-text-color: #1c1c1c;
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  min-height: 75vh;
+  text-align: center;
+
+  .card-box{
+    background-color: $login-bg-color;
+    color: lighten($login-button-bg-color, 20%);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(28, 28, 28, 0.5);
+    max-width: 400px;
+    width: 100%;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+
+    label {
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"], input[type="password"]{
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid lighten($login-text-color, 20%);
+      border-radius: 5px;
+      font-size: 1rem;
+      background-color: $login-bg-color;
+      color: lighten($login-text-color, 20%);
+      box-sizing: border-box;
+    }
+
+    .password-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input[type="password"], input[type="text"] {
+        flex: 1;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 10px;
+        font-size: 1.2em;
+        color: lightten($login-text-color, 20%);
+        cursor: pointer;
+      }
+    }
+
+    small {
+      color: red;
+      font-size: 0.8em;
+    }
+  }
+
+  .form-group:last-child {
+    text-align: center;
+
+    button {
+      background-color: $login-button-bg-color;
+      color: $login-button-text-color;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($login-button-bg-color, 10%);
+      }
+
+      &:disabled {
+        background-color: lighten($login-button-bg-color, 20%);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .links {
+    margin-top: 1rem;
+    text-align: center;
+
+    a {
+      color: lighten($login-text-color, 20%);
+      text-decoration: none;
+      display: block;
+      margin-top: 0.5rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media (max-width: 768px){
+    .card-box{
+      padding: 1.5rem;
+    }
+  }
+}
+
+
+
+/**
+
 * {
   margin: 0;
   padding: 0;
@@ -255,3 +376,4 @@ button:hover {
     display: none;
   }
 }
+  */
