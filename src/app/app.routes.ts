@@ -80,6 +80,9 @@ export const routes: Routes = [
   {
     path: 'error-500',
     component: Error500Component,
+  },
+  { path: '**', 
+    redirectTo: '/error-404' 
   }
 ];
 
