@@ -5,17 +5,25 @@ import Swal from 'sweetalert2';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { CardImageComponent } from '../../../shared/card-image/card-image.component';
 import { HeaderComponent } from '../../../shared/header/header.component';
+import { CalendarModule } from 'primeng/calendar';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import localeEsExtra from '@angular/common/locales/extra/es';
+import { FloatLabelModule } from 'primeng/floatlabel';
+
+
+registerLocaleData(localeEs, 'es', localeEsExtra);
 
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, CardImageComponent, HeaderComponent],
+  imports: [FloatLabelModule, ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, CardImageComponent, HeaderComponent, CalendarModule],
   providers: [FormBuilder],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss']
 })
 export class RegistrationFormComponent implements OnInit {
-
+  formGroup: any;
   form: FormGroup;
   provincias: string[] = [
     "Azuay", "Bolívar", "Cañar", "Carchi", "Chimborazo", "Cotopaxi", "El Oro",
@@ -37,7 +45,7 @@ export class RegistrationFormComponent implements OnInit {
     this.form = this.formBuilder.group({
       cedula: new FormControl('', [Validators.required, this.validarCedulaEcuatoriana]),
       nombreCompleto: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.validarNombreCompleto]),
-      fechaNacimiento: new FormControl('', [Validators.required, this.validarEdadMinima(18)]),
+      fechaNacimiento: new FormControl('', [Validators.required, this.validarEdad(18, 50)]),
       genero: new FormControl('', [Validators.required]),
       provincia: new FormControl('', [Validators.required]),
       tipoComando: new FormControl('', [Validators.required]),
@@ -56,6 +64,7 @@ export class RegistrationFormComponent implements OnInit {
     this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
   }
 
+
   private validarNombreCompleto(control: AbstractControl): ValidationErrors | null {
     const nombre = control.value;
     if (!nombre) {
@@ -65,16 +74,15 @@ export class RegistrationFormComponent implements OnInit {
     if (nombre.length < 3) {
       return { nombreInvalido: true };
     }
-    // Expresión regular para tildes y texto en latam para validar nombres completos no permitir numeros o signos
-    const expresionRegular = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\u0020\u0027\u002E\u002D]*$/;
+
+    const expresionRegular = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]*$/;
     if (expresionRegular.test(nombre)) {
       return null;
     } else {
       return { nombreInvalido: true };
     }
-
-    return null;
   }
+
 
   private validarNotaGrado(control: AbstractControl): ValidationErrors | null {
     const nota = control.value;
@@ -163,22 +171,25 @@ export class RegistrationFormComponent implements OnInit {
     }
   }
 
-  private validarEdadMinima(edadMinima: number) {
+  private validarEdad(minEdad: number, maxEdad: number) {
     return (control: AbstractControl): ValidationErrors | null => {
       const fechaNacimiento = new Date(control.value);
+      if (!control.value || isNaN(fechaNacimiento.getTime())) {
+        return { edadInvalida: true };
+      }
+
       const fechaActual = new Date();
       const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
       const diferenciaMeses = fechaActual.getMonth() - fechaNacimiento.getMonth();
       const diferenciaDias = fechaActual.getDate() - fechaNacimiento.getDate();
 
       if (
-        edad > edadMinima ||
-        (edad === edadMinima && diferenciaMeses > 0) ||
-        (edad === edadMinima && diferenciaMeses === 0 && diferenciaDias >= 0)
+        (edad > minEdad || (edad === minEdad && diferenciaMeses > 0) || (edad === minEdad && diferenciaMeses === 0 && diferenciaDias >= 0)) &&
+        (edad < maxEdad || (edad === maxEdad && diferenciaMeses < 0) || (edad === maxEdad && diferenciaMeses === 0 && diferenciaDias <= 0))
       ) {
         return null;
       } else {
-        return { edadMinima: true };
+        return { edadInvalida: true };
       }
     };
   }
@@ -225,4 +236,18 @@ export class RegistrationFormComponent implements OnInit {
       this.form.markAllAsTouched();
     }
   }
+
+  filterOnlyNumbers(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
+  }
+
+  filterOnlyLetters(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]/g, '');
+  }
 }
+function defineLocale(arg0: string, localeEs: (string | number | number[] | (string | undefined)[] | ((val: number) => number) | (string[] | undefined)[] | { AUD: (string | undefined)[]; BRL: (string | undefined)[]; BYN: (string | undefined)[]; CAD: (string | undefined)[]; CNY: (string | undefined)[]; EGP: never[]; ESP: string[]; GBP: (string | undefined)[]; HKD: (string | undefined)[]; ILS: (string | undefined)[]; INR: (string | undefined)[]; JPY: (string | undefined)[]; KRW: (string | undefined)[]; MXN: (string | undefined)[]; NZD: (string | undefined)[]; PHP: (string | undefined)[]; RON: (string | undefined)[]; THB: string[]; TWD: (string | undefined)[]; USD: string[]; XAF: never[]; XCD: (string | undefined)[]; XOF: never[]; } | undefined)[]) {
+  throw new Error('Function not implemented.');
+}
+

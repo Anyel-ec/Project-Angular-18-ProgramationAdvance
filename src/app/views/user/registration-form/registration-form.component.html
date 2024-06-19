@@ -1,19 +1,19 @@
 <app-header></app-header>
 <app-card-image></app-card-image>
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
+<div class="container d-flex justify-content-center align-items-center min-vh-100 mt-5">
   <div class="col-md-8">
     <form (ngSubmit)="save($event)" [formGroup]="form" class="formulario">
       <div class="formulario__text">
         <h1 class="formulario__header">Formulario de Inscripción a Fuerzas Armadas</h1>
         <div class="formulario__bar"></div>
-
         <div class="row">
           <!-- Cédula -->
           <div class="col-md-6 form-group position-relative mb-3">
             <label>Cédula<span class="text-danger">*</span>:</label>
             <input type="text" maxlength="10" class="form-control" formControlName="cedula"
-              (blur)="markAsTouched('cedula')"
-              [ngClass]="{'is-invalid': isInvalid('cedula'), 'is-valid': isValid('cedula')}" pattern="[0-9]*">
+              (blur)="markAsTouched('cedula')" (input)="filterOnlyNumbers($event)"
+              [ngClass]="{'is-invalid': isInvalid('cedula'), 'is-valid': isValid('cedula')}" pattern="[0-9]*"
+              inputmode="numeric">
             <small *ngIf="getError('cedula', 'required')" class="text-danger">El campo es obligatorio</small>
             <small *ngIf="getError('cedula', 'cedulaInvalida')" class="text-danger">Cédula inválida</small>
           </div>
@@ -22,10 +22,11 @@
           <div class="col-md-6 form-group position-relative mb-3">
             <label>Número de Celular<span class="text-danger">*</span>:</label>
             <input type="text" maxlength="10" class="form-control" formControlName="telefono"
-              (blur)="markAsTouched('telefono')"
+              (blur)="markAsTouched('telefono')" (input)="filterOnlyNumbers($event)"
               [ngClass]="{'is-invalid': isInvalid('telefono'), 'is-valid': isValid('telefono')}" pattern="[0-9]*">
             <small *ngIf="getError('telefono', 'required')" class="text-danger">El campo es obligatorio</small>
-            <small *ngIf="getError('telefono', 'telefonoInvalido')" class="text-danger">Número de celular inválido</small>
+            <small *ngIf="getError('telefono', 'telefonoInvalido')" class="text-danger">Número de celular
+              inválido</small>
           </div>
         </div>
 
@@ -37,7 +38,8 @@
               (blur)="markAsTouched('correoElectronico')"
               [ngClass]="{'is-invalid': isInvalid('correoElectronico'), 'is-valid': isValid('correoElectronico')}">
             <small *ngIf="getError('correoElectronico', 'required')" class="text-danger">El campo es obligatorio</small>
-            <small *ngIf="getError('correoElectronico', 'correoInvalido')" class="text-danger">Correo electrónico inválido</small>
+            <small *ngIf="getError('correoElectronico', 'correoInvalido')" class="text-danger">Correo electrónico
+              inválido</small>
           </div>
 
           <!-- Nombre Completo -->
@@ -45,14 +47,20 @@
             <label>Nombre Completo<span class="text-danger">*</span>:</label>
             <input type="text" class="form-control" formControlName="nombreCompleto"
               (blur)="markAsTouched('nombreCompleto')"
+              (input)="filterOnlyLetters($event)" maxlength="100" minlength="3"
               [ngClass]="{'is-invalid': isInvalid('nombreCompleto'), 'is-valid': isValid('nombreCompleto')}">
             <small *ngIf="getError('nombreCompleto', 'required')" class="text-danger">El campo es obligatorio</small>
-            <small *ngIf="getError('nombreCompleto', 'minlength')" class="text-danger">El nombre debe tener al menos 3 caracteres</small>
-            <small *ngIf="getError('nombreCompleto', 'maxlength')" class="text-danger">El nombre no puede exceder los 100 caracteres</small>
+            <small *ngIf="getError('nombreCompleto', 'minlength')" class="text-danger">El nombre debe tener al menos 3
+              caracteres</small>
+            <small *ngIf="getError('nombreCompleto', 'maxlength')" class="text-danger">El nombre no puede exceder los
+              100 caracteres</small>
+            <small *ngIf="getError('nombreCompleto', 'nombreInvalido')" class="text-danger">Nombre inválido</small>
           </div>
+
         </div>
 
         <div class="row">
+
           <!-- Fecha de Nacimiento -->
           <div class="col-md-6 form-group position-relative mb-3">
             <label>Fecha de Nacimiento<span class="text-danger">*</span>:</label>
@@ -60,7 +68,10 @@
               (blur)="markAsTouched('fechaNacimiento')"
               [ngClass]="{'is-invalid': isInvalid('fechaNacimiento'), 'is-valid': isValid('fechaNacimiento')}">
             <small *ngIf="getError('fechaNacimiento', 'required')" class="text-danger">El campo es obligatorio</small>
-            <small *ngIf="getError('fechaNacimiento', 'edadMinima')" class="text-danger">Debe tener al menos 18 años</small>
+            <small *ngIf="getError('fechaNacimiento', 'edadMinima')" class="text-danger">Debe tener al menos 18
+              años</small>
+            <small *ngIf="getError('fechaNacimiento', 'edadInvalida')" class="text-danger">Debe tener entre 18 a 50
+              años</small>
           </div>
 
           <!-- Provincia -->
@@ -82,8 +93,10 @@
             <input type="text" class="form-control" formControlName="direccion" (blur)="markAsTouched('direccion')"
               [ngClass]="{'is-invalid': isInvalid('direccion'), 'is-valid': isValid('direccion')}">
             <small *ngIf="getError('direccion', 'required')" class="text-danger">El campo es obligatorio</small>
-            <small *ngIf="getError('direccion', 'minlength')" class="text-danger">La dirección debe tener al menos 10 caracteres</small>
-            <small *ngIf="getError('direccion', 'maxlength')" class="text-danger">La dirección no puede exceder los 100 caracteres</small>
+            <small *ngIf="getError('direccion', 'minlength')" class="text-danger">La dirección debe tener al menos 10
+              caracteres</small>
+            <small *ngIf="getError('direccion', 'maxlength')" class="text-danger">La dirección no puede exceder los 100
+              caracteres</small>
           </div>
 
           <!-- Género -->
@@ -123,7 +136,8 @@
               [ngClass]="{'is-invalid': isInvalid('notaGrado'), 'is-valid': isValid('notaGrado')}" min="0" max="20">
             <small *ngIf="getError('notaGrado', 'required')" class="text-danger">El campo es obligatorio</small>
             <small *ngIf="getError('notaGrado', 'min')" class="text-danger">La nota debe ser mayor o igual a 0</small>
-            <small *ngIf="getError('notaGrado', 'max')" class="text-danger">La nota no puede exceder los 20 puntos</small>
+            <small *ngIf="getError('notaGrado', 'max')" class="text-danger">La nota no puede exceder los 20
+              puntos</small>
           </div>
         </div>
 
@@ -133,14 +147,15 @@
             <div class="mb-3">
               <div class="d-flex justify-content-center">
                 <re-captcha (resolved)="resolved($event)"
-                siteKey="6LcCnvYpAAAAANhQwPdVNrZkKoHrdoUeURM5khPJ"></re-captcha>
+                  siteKey="6LcCnvYpAAAAANhQwPdVNrZkKoHrdoUeURM5khPJ"></re-captcha>
               </div>
               <div *ngIf="!captchaValid && form.get('captcha')?.touched" class="text-danger">
                 <small>Completa el reCAPTCHA</small>
               </div>
             </div>
 
-            <button class="btn btn-primary w-100" [disabled]="form.invalid || !captchaValid" type="submit">ENVIAR</button>
+            <button class="btn btn-primary w-100" [disabled]="form.invalid || !captchaValid"
+              type="submit">ENVIAR</button>
           </div>
         </div>
       </div>
