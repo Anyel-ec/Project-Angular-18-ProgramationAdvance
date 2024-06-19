@@ -42,10 +42,11 @@ export class AppComponent {
           '/email-comprobante-rechazado',
           '/verify-data'
         ];
+        this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
+
         const hideHeaderAndFooter = routesToHideHeaderAndFooter.includes(event.urlAfterRedirects);
         this.showHeader = !hideHeaderAndFooter;
         this.showFooter = !hideHeaderAndFooter;
-        this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
       }
     });
   }
