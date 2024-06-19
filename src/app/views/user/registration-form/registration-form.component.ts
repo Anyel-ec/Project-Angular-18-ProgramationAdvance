@@ -3,12 +3,13 @@ import { ReactiveFormsModule, FormControl, Validators, FormsModule, FormGroup, F
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
-import { InfoComponent } from '../info/info.component';
+import { CardImageComponent } from '../../../shared/card-image/card-image.component';
+import { HeaderComponent } from '../../../shared/header/header.component';
 
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, InfoComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, CardImageComponent, HeaderComponent],
   providers: [FormBuilder],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss']

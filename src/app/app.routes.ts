@@ -6,7 +6,6 @@ import { PageNotFoundComponent } from './views/admin/page-not-found/page-not-fou
 import { EndProcessComponent } from './views/admin/end-process/end-process.component';
 import { VerifyDataComponent } from './views/admin/verify-data/verify-data.component';
 import { LoginComponent } from './views/admin/login/login.component';
-import { InfoComponent } from './views/user/info/info.component';
 import { LoginTwoComponent } from './views/login-two/login-two.component';
 
 export const routes: Routes = [
@@ -17,10 +16,6 @@ export const routes: Routes = [
   {
     path: 'login-two',
     component: LoginTwoComponent,
-  },
-  {
-    path: 'informativo',
-    component: InfoComponent,
   },
   {
     path: 'finalizar-proceso',
