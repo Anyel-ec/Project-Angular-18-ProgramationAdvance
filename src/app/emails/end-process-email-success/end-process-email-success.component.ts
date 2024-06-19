@@ -5,7 +5,10 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './end-process-email-success.component.html',
-  styleUrl: './end-process-email-success.component.scss'
+  styleUrl: './end-process-email-success.component.scss',
+  host: {
+    'ngSkipHydration': ''
+  }
 })
 export class EndProcessEmailSuccessComponent {
 

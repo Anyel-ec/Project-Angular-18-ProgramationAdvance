@@ -5,8 +5,11 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './verify-data-success.component.html',
-  styleUrl: './verify-data-success.component.scss'
+  styleUrl: './verify-data-success.component.scss',
+  host: {
+    'ngSkipHydration': ''
+  }
 })
 export class VerifyDataSuccessComponent {
-
+  linkSubida: string = '/subir-recibo';
 }

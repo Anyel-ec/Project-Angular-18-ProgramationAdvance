@@ -8,7 +8,7 @@ interface Curso {
   nombresCompletos: string;
   genero: string;
   tipoCurso: string;
-  pagado: boolean;
+  estado: 'Pendiente' | 'Aceptado' | 'Rechazado' ;
 }
 
 @Component({
@@ -26,7 +26,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Juan Pérez',
       genero: 'Masculino',
       tipoCurso: 'Policia Nacional',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 2,
@@ -34,7 +34,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'María Gómez',
       genero: 'Femenino',
       tipoCurso: 'Policia de Transito',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 3,
@@ -42,7 +42,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Carlos Sánchez',
       genero: 'Masculino',
       tipoCurso: 'Bombero',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 4,
@@ -50,7 +50,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Ana Martínez',
       genero: 'Femenino',
       tipoCurso: 'Militar',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 5,
@@ -58,7 +58,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Pedro Fernández',
       genero: 'Masculino',
       tipoCurso: 'Policia',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 6,
@@ -66,7 +66,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Luis González',
       genero: 'Masculino',
       tipoCurso: 'Marin',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 7,
@@ -74,7 +74,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Laura Rodríguez',
       genero: 'Femenino',
       tipoCurso: 'Policia Nacional',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 8,
@@ -82,7 +82,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Roberto Jiménez',
       genero: 'Masculino',
       tipoCurso: 'Policia de Transito',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 9,
@@ -90,7 +90,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Sofía Ramírez',
       genero: 'Femenino',
       tipoCurso: 'Bombero',
-      pagado: false,
+      estado: 'Pendiente',
     },
     {
       id: 10,
@@ -98,7 +98,7 @@ export class EndProcessComponent implements OnInit {
       nombresCompletos: 'Daniel López',
       genero: 'Masculino',
       tipoCurso: 'Militar',
-      pagado: false,
+      estado: 'Pendiente',
     },
   ];
 
@@ -120,10 +120,8 @@ export class EndProcessComponent implements OnInit {
             .toLowerCase()
             .includes(this.searchTerm.toLowerCase()) ||
           curso.genero.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          curso.tipoCurso
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase()) ||
-          (curso.pagado ? 'sí' : 'no').includes(this.searchTerm.toLowerCase())
+          curso.tipoCurso.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          curso.estado.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
       this.filteredData = this.data;
@@ -140,68 +138,51 @@ export class EndProcessComponent implements OnInit {
   }
 
   verComprobante(rowData: Curso): void {
-    console.log('Ver comprobante de:', rowData);
     this.Comprobante = true;
   }
 
   aceptar(rowData: Curso): void {
-    console.log('Aceptar:', rowData);
-    if (rowData.pagado) {
+    if (rowData.estado === 'Pendiente') {
       Swal.fire({
-        title: 'Pago realizado',
-        text: 'El aspirante ya ha realizado el pago.',
-        icon: 'info',
+        title: 'Estas seguro?',
+        text: 'Se aceptará la inscripcion del aspirante.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Inscripcion aceptada',
+            text: 'Se emitira el correo de confirmación al aspirante.',
+            icon: 'success',
+          });
+          rowData.estado = 'Aceptado';
+        }
       });
-      return;
     }
-
-    Swal.fire({
-      title: 'Estas seguro?',
-      text: 'Se aceptará el pago del aspirante.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Aceptar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Pago aceptado',
-          text: 'Se emitira el correo de confirmación al aspirante.',
-          icon: 'success',
-        });
-        rowData.pagado = true;
-      }
-    });
   }
-
   rechazar(rowData: Curso): void {
-    console.log('Declinar:', rowData);
-    if (!rowData.pagado) {
+    if (rowData.estado === 'Pendiente') {
       Swal.fire({
-        title: 'Sin pago',
-        text: 'El aspirante no ha realizado el pago.',
-        icon: 'info',
+        title: 'Estas seguro?',
+        text: 'Se rechazara la inscripcion del aspirante.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Rechazar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Inscripcion rechazada',
+            text: 'Se emitira el correo al aspirante.',
+            icon: 'success',
+          });
+          rowData.estado = 'Rechazado';
+        }
       });
-      return;
     }
-    Swal.fire({
-      title: 'Estas seguro?',
-      text: 'Se rechazara el pago del aspirante.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Rechazar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Pago rechazado',
-          text: 'Se emitira el correo al aspirante.',
-          icon: 'success',
-        });
-        rowData.pagado = false;
-      }
-    });
   }
 }

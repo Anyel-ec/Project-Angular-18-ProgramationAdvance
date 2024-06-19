@@ -27,15 +27,28 @@ export class AppComponent {
   title = 'project';
   showHeader: boolean = true;
   isAdmin: boolean = false;
+  showFooter: boolean = true;
+
 
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const loginRoute = ['/login', '/error-404', '/error-403', '/error-500'];
-        const adminRoutes = ['/verificar-registros', '/finalizar-proceso'];
 
-        this.showHeader = !loginRoute.includes(event.urlAfterRedirects);
+        const adminRoutes = ['/verificar-registros', '/finalizar-proceso'];
+        const routesToHideHeaderAndFooter = [
+          '/login',
+          '/email-datos-aceptados',
+          '/email-datos-rechazados',
+          '/email-comprobante-aceptado',
+          '/email-comprobante-rechazado',
+          '/verify-data'
+        ];
         this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
+
+        const hideHeaderAndFooter = routesToHideHeaderAndFooter.includes(event.urlAfterRedirects);
+        this.showHeader = !hideHeaderAndFooter;
+        this.showFooter = !hideHeaderAndFooter;
       }
     });
   }

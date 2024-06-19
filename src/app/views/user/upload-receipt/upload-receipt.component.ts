@@ -59,8 +59,8 @@ export class UploadReceiptComponent {
     if (this.form.valid) {
       Swal.fire({
         icon: 'success',
-        title: 'Comprobante Enviado',
-        text: 'El comprobante se ha enviado con éxito.',
+        title: 'Documento Enviado',
+        text: 'El documento se ha enviado con éxito.',
         confirmButtonText: 'Aceptar',
       }).then((result) => {
         if (result.isConfirmed) {
@@ -74,7 +74,7 @@ export class UploadReceiptComponent {
       Swal.fire({
         icon: 'warning',
         title: 'Error',
-        text: 'Por favor, suba el comprobante antes de enviar.',
+        text: 'Por favor, suba el documento antes de enviar.',
         confirmButtonText: 'Aceptar',
       });
     }

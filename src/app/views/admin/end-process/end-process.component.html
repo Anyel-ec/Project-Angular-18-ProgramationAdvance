@@ -37,9 +37,9 @@
         <th pSortableColumn="tipoCurso">
           Tipo de Curso <p-sortIcon field="tipoCurso"></p-sortIcon>
         </th>
-        <th>Comprobante de Pago</th>
-        <th pSortableColumn="pagado">
-          Pagado <p-sortIcon field="pagado"></p-sortIcon>
+        <th>Nota de Grado</th>
+        <th pSortableColumn="estado">
+          Estado <p-sortIcon field="estado"></p-sortIcon>
         </th>
         <th>Acciones</th>
       </tr>
@@ -62,27 +62,45 @@
           </button>
         </td>
         <td style="text-align: center">
-          <p-inputSwitch
-            [(ngModel)]="rowData.pagado"
-            [disabled]="true"
-          ></p-inputSwitch>
+          <p-tag
+            *ngIf="rowData.estado === 'Pendiente'"
+            icon="pi pi-spin pi-spinner"
+            severity="warning"
+            value="Pendiente"
+          ></p-tag>
+          <p-tag
+            *ngIf="rowData.estado === 'Aceptado'"
+            icon="pi pi-verified"
+            severity="success"
+            value="Aceptado"
+          ></p-tag>
+          <p-tag
+            *ngIf="rowData.estado === 'Rechazado'"
+            icon="pi pi-times-circle"
+            severity="danger"
+            value="Rechazado"
+          ></p-tag>
         </td>
         <td style="text-align: center">
-          <button
-            class="btn_success"
-            (click)="aceptar(rowData)"
-            [disabled]="rowData.pagado"
-          >
-            <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
-          </button>
+          <div *ngIf="rowData.estado === 'Pendiente'">
+            <button class="btn_success" (click)="aceptar(rowData)">
+              <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
+            </button>
 
-          <button
-            class="btn_success"
-            (click)="rechazar(rowData)"
-            [disabled]="rowData.pagado"
-          >
-            <p-tag icon="pi pi-times" severity="danger" value="Rechazar" />
-          </button>
+            <button class="btn_success" (click)="rechazar(rowData)">
+              <p-tag icon="pi pi-times" severity="danger" value="Rechazar" />
+            </button>
+          </div>
+
+          <div *ngIf="rowData.estado === 'Aceptado' || rowData.estado === 'Rechazado'">
+            <button class="btn_success" (click)="aceptar(rowData)" style="cursor:  not-allowed;" disabled>
+              <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
+            </button>
+
+            <button class="btn_success" (click)="rechazar(rowData)" style="cursor:  not-allowed;" disabled>
+              <p-tag icon="pi pi-times" severity="danger" value="Rechazar" />
+            </button>
+          </div>
         </td>
       </tr>
     </ng-template>
