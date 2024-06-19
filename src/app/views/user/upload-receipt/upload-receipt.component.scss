@@ -1,12 +1,9 @@
-
-
 .upload {
-  background-color: #9c9191e2;
+  background-color: rgba(84,58,183,1);
   height: 100vh; 
   display: flex;
   justify-content: center; 
   align-items: center; 
-
   .upload-receipt {
     border: 2px dashed #908b8b;
     width: 90vw;
@@ -16,7 +13,6 @@
     justify-content: center;
     align-items: center;
     background-color: #f0f0f0;
-    
     
     .file-preview {
       display: flex; 
