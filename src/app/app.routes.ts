@@ -6,16 +6,12 @@ import { PageNotFoundComponent } from './views/admin/page-not-found/page-not-fou
 import { EndProcessComponent } from './views/admin/end-process/end-process.component';
 import { VerifyDataComponent } from './views/admin/verify-data/verify-data.component';
 import { LoginComponent } from './views/admin/login/login.component';
-import { LoginTwoComponent } from './views/login-two/login-two.component';
+
 
 export const routes: Routes = [
   {
     path: 'subir-recibo',
     component: UploadReceiptComponent,
-  },
-  {
-    path: 'login-two',
-    component: LoginTwoComponent,
   },
   {
     path: 'finalizar-proceso',

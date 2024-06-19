@@ -39,18 +39,3 @@ export class NavComponent{
       ];
   }
 }
-
-// items:[
-//   {
-//       label:'Registros Aspirantes',
-//       icon: "pi pi-fw pi-search",
-//       routerLink: ['/registros-aspirantes']
-
-//   },
-//   {
-//       label:'Verificar Pagos',
-//       icon:'pi pi-fw pi-verified',
-//       routerLink: ['/finalizar-proceso']
-
-//   },
-// ]

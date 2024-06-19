@@ -1,8 +1,13 @@
 :host ::ng-deep .p-menubar {
     display: flex;
     justify-content: center;
-    background-color: inherit;
+    background-color: white;
     color: inherit;
+    position: fixed; 
+    top: 0;        
+    left: 0;        
+    width: 100%;    
+    z-index: 1000;  
 }
 
 :host ::ng-deep .p-menubar .p-menubar-start {

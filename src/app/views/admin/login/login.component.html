@@ -1,42 +1,34 @@
-<!-- src/app/login/login.component.html -->
-<div class="login-container">
-  <div class="card-box">
-    <h2>Iniciar Sesión</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" formControlName="username" required>
-        <div
-          *ngIf="loginForm.controls['username'].invalid && (loginForm.controls['username'].dirty || loginForm.controls['username'].touched)">
-          <small *ngIf="loginForm.controls['username'].errors?.['required']">El usuario es requerido.</small>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <div class="password-container">
-          <input [type]="hidePassword ? 'password' : 'text'" id="password" formControlName="password" required>
-          <i class="toggle-password" (click)="togglePasswordVisibility()">
-            {{ hidePassword ? '👁️' : '👁️‍🗨️' }}
-          </i>
-        </div>
-        <div
-          *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
-          <small *ngIf="loginForm.controls['password'].errors?.['required']">La contraseña es requerida.</small>
-          <small *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 6
-            caracteres.</small>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="checkbox" id="remember" formControlName="remember">
-        <label for="remember">Recuérdame</label>
-      </div>
-      <div class="form-group">
-        <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
-      </div>
-    </form>
-    <div class="links">
-      <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
-      <a href="/register">Crear una cuenta</a>
+<div class="main">
+  <p class="sign" align="center">Inciar Sesion</p>
+  <form class="form1" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <input
+      class="un"
+      type="text"
+      align="center"
+      placeholder="Usuario"
+      id="username"
+      formControlName="username"
+    />
+    <div *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)">
+      <small class="error-message" *ngIf="loginForm.get('username')?.errors?.['required']">
+        El usuario es requerido.
+      </small>
     </div>
-  </div>
+    <input
+      class="pass"
+      type="{{ hidePassword ? 'password' : 'text' }}"
+      align="center"
+      placeholder="Contraseña"
+      id="password"
+      formControlName="password"
+    />
+
+    <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+      <small class="error-message" *ngIf="loginForm.get('password')?.errors?.['required']">
+        La contraseña es requerida.
+      </small>
+    </div>
+    <button class="submit" type="submit" align="center">Ingresar</button>
+  </form>
 </div>
+
