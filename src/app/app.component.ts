@@ -31,7 +31,7 @@ export class AppComponent {
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const loginRoute = ['/login'];
+        const loginRoute = ['/login', '/error-404', '/error-403', '/error-500'];
         const adminRoutes = ['/verificar-registros', '/finalizar-proceso'];
 
         this.showHeader = !loginRoute.includes(event.urlAfterRedirects);
