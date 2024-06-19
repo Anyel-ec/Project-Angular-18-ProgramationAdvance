@@ -5,7 +5,10 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './registration-form-email.component.html',
-  styleUrl: './registration-form-email.component.scss'
+  styleUrl: './registration-form-email.component.scss',
+  host: {
+    'ngSkipHydration': ''
+  }
 })
 export class RegistrationFormEmailComponent {
 

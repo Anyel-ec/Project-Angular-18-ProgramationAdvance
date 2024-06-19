@@ -5,7 +5,10 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './verify-data-denied.component.html',
-  styleUrl: './verify-data-denied.component.scss'
+  styleUrl: './verify-data-denied.component.scss',
+  host: {
+    'ngSkipHydration': ''
+  }
 })
 export class VerifyDataDeniedComponent {
   linkRegistro: string = '/registro-aspirantes';

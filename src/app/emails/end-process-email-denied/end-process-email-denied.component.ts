@@ -5,7 +5,10 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './end-process-email-denied.component.html',
-  styleUrl: './end-process-email-denied.component.scss'
+  styleUrl: './end-process-email-denied.component.scss',
+  host: {
+    'ngSkipHydration': ''
+  }
 })
 export class EndProcessEmailDeniedComponent {
   linkSubida: string = '/subir-recibo';
