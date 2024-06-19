@@ -4,6 +4,8 @@
     justify-content: center;
     background-color: inherit; 
     color: inherit;
+    border: none;
+    border-radius: 90%;
 }
 
 :host ::ng-deep .p-menubar .p-menubar-start {
