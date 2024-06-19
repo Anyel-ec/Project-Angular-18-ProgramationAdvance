@@ -15,6 +15,8 @@ import { RegistrationFormEmailComponent } from './emails/registration-form-email
 import { VerifyDataSuccessComponent } from './emails/verify-data-success/verify-data-success.component';
 import { VerifyDataDeniedComponent } from './emails/verify-data-denied/verify-data-denied.component';
 import { EndProcessEmailDeniedComponent } from './emails/end-process-email-denied/end-process-email-denied.component';
+import { Error403Component } from './errors/error-403/error-403.component';
+import { Error500Component } from './errors/error-500/error-500.component';
 
 
 export const routes: Routes = [
@@ -38,9 +40,6 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
   },
-
-
-
   {
     path: '1',
     component: RegistrationFormEmailComponent,
@@ -61,8 +60,6 @@ export const routes: Routes = [
     path: '5',
     component: EndProcessEmailDeniedComponent,
   },
-
-
   {
     path: '',
     redirectTo: '/registro-aspirantes',
@@ -76,11 +73,14 @@ export const routes: Routes = [
     path: 'error-404',
     component: Error404Component,
   },
-
-
-
-
-
+  {
+    path: 'error-403',
+    component: Error403Component,
+  },
+  {
+    path: 'error-500',
+    component: Error500Component,
+  }
 ];
 
 @NgModule({
