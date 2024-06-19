@@ -24,12 +24,12 @@ export class NavAdminComponent {
   ngOnInit() {
       this.items = [
           {
-            label:'Registros Aspirantes',
+            label:'Verificar Registros',
             icon: "pi pi-fw pi-search",
             routerLink: ['/verificar-registros']
           },
           {
-            label:'Verificar Pagos',
+            label:'Verificar Documentos',
             icon:'pi pi-fw pi-verified',
             routerLink: ['/finalizar-proceso']
           },
