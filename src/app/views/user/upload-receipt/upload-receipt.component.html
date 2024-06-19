@@ -39,7 +39,7 @@
       <p>Por favor, adjunte Nota de grado</p>
       <div class="submit-button-container">
         <button type="submit" class="submit-button">Enviar</button>
-        <button type="button" class="clean-button" (click)="clearFile()">Limpiar</button>
+        <button *ngIf="fileUrl != null || isImage"  type="button" class="clean-button" (click)="clearFile()">Limpiar</button>
       </div>
     </form>
   </div>
