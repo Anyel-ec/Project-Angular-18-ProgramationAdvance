@@ -1,3 +1,4 @@
+<br><br><br>
 <div class="upload">
   <div class="upload-receipt">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -23,9 +24,6 @@
             alt="Vista previa de la imagen"
             class="preview-image"
           />
-          <button type="button" class="close-btn" (click)="clearFile()">
-            ✖
-          </button>
         </ng-container>
         <ng-template #pdfTemplate>
           <embed
@@ -35,16 +33,14 @@
             height="100%"
             class="preview-pdf"
           />
-          <button type="button" class="close-btn_2" (click)="clearFile()">
-            ✖
-          </button>
         </ng-template>
       </div>
 
-      <p>Por favor, adjunte comprobante de pago</p>
+      <p>Por favor, adjunte Nota de grado</p>
       <div class="submit-button-container">
         <button type="submit" class="submit-button">Enviar</button>
+        <button type="button" class="clean-button" (click)="clearFile()">Limpiar</button>
       </div>
     </form>
   </div>
-</div>
+</div> 

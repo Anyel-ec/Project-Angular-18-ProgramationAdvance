@@ -68,11 +68,19 @@
           ></p-inputSwitch>
         </td>
         <td style="text-align: center">
-          <button class="btn_success" (click)="aceptar(rowData)">
+          <button
+            class="btn_success"
+            (click)="aceptar(rowData)"
+            [disabled]="rowData.pagado"
+          >
             <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
           </button>
 
-          <button class="btn_success" (click)="rechazar(rowData)">
+          <button
+            class="btn_success"
+            (click)="rechazar(rowData)"
+            [disabled]="rowData.pagado"
+          >
             <p-tag icon="pi pi-times" severity="danger" value="Rechazar" />
           </button>
         </td>
