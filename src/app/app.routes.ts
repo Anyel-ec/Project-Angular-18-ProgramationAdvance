@@ -6,6 +6,11 @@ import { PageNotFoundComponent } from './views/admin/page-not-found/page-not-fou
 import { EndProcessComponent } from './views/admin/end-process/end-process.component';
 import { VerifyDataComponent } from './views/admin/verify-data/verify-data.component';
 import { LoginComponent } from './views/admin/login/login.component';
+import { EndProcessEmailSuccessComponent } from './emails/end-process-email-success/end-process-email-success.component';
+import { RegistrationFormEmailComponent } from './emails/registration-form-email/registration-form-email.component';
+import { VerifyDataSuccessComponent } from './emails/verify-data-success/verify-data-success.component';
+import { VerifyDataDeniedComponent } from './emails/verify-data-denied/verify-data-denied.component';
+import { EndProcessEmailDeniedComponent } from './emails/end-process-email-denied/end-process-email-denied.component';
 
 
 export const routes: Routes = [
@@ -29,6 +34,28 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
   },
+  {
+    path: '1',
+    component: RegistrationFormEmailComponent,
+  },
+  {
+    path: '2',
+    component: VerifyDataSuccessComponent,
+  },
+  {
+    path: '3',
+    component: VerifyDataDeniedComponent,
+  },
+  {
+    path: '4',
+    component: EndProcessEmailSuccessComponent,
+  },
+  {
+    path: '5',
+    component: EndProcessEmailDeniedComponent,
+  },
+
+
   {
     path: '',
     redirectTo: '/registro-aspirantes',
