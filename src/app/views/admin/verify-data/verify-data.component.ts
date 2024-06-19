@@ -41,7 +41,78 @@ export class VerifyDataComponent implements OnInit {
       tipoCurso: 'Policia de Transito',
       estado: 'Pendiente', // Estado inicial
     },
-    // Agrega más datos según sea necesario
+    {
+      id: 3,
+      cedula: '1234567890',
+      nombresCompletos: 'Carlos Pérez',
+      genero: 'Masculino',
+      provincia: 'Pichincha',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    },
+    {
+      id: 4,
+      cedula: '2345678901',
+      nombresCompletos: 'Ana Martínez',
+      genero: 'Femenino',
+      provincia: 'Manabí',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    },
+    {
+      id: 5,
+      cedula: '3456789012',
+      nombresCompletos: 'Jorge Rodríguez',
+      genero: 'Masculino',
+      provincia: 'Azuay',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    },
+    {
+      id: 6,
+      cedula: '4567890123',
+      nombresCompletos: 'Luisa Fernández',
+      genero: 'Femenino',
+      provincia: 'Loja',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    },
+    {
+      id: 7,
+      cedula: '5678901234',
+      nombresCompletos: 'David Morales',
+      genero: 'Masculino',
+      provincia: 'El Oro',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    },
+    {
+      id: 8,
+      cedula: '6789012345',
+      nombresCompletos: 'Laura Rivas',
+      genero: 'Femenino',
+      provincia: 'Tungurahua',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    },
+    {
+      id: 9,
+      cedula: '7890123456',
+      nombresCompletos: 'Pedro Castro',
+      genero: 'Masculino',
+      provincia: 'Imbabura',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    },
+    {
+      id: 10,
+      cedula: '8901234567',
+      nombresCompletos: 'Sofía Herrera',
+      genero: 'Femenino',
+      provincia: 'Chimborazo',
+      tipoCurso: 'Policia de Transito',
+      estado: 'Pendiente'
+    }    
   ];
 
   searchTerm: string = '';
