@@ -1,11 +1,10 @@
 
 :host ::ng-deep .p-menubar {
-    display: flex;
     justify-content: center;
-    background-color: inherit; 
-    color: inherit;
+    background-color: rgb(255, 255, 255);
     border: none;
-    border-radius: 90%;
+    border-bottom-left-radius: 90%;
+    border-bottom-right-radius: 90%;
 }
 
 :host ::ng-deep .p-menubar .p-menubar-start {
