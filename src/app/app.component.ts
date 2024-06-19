@@ -33,20 +33,23 @@ export class AppComponent {
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const adminRoutes = ['/verificar-registros', '/finalizar-proceso'];
-        const routesToHideHeaderAndFooter = [
-          '/login',
-          '/email-datos-aceptados',
-          '/email-datos-rechazados',
-          '/email-comprobante-aceptado',
-          '/email-comprobante-rechazado',
-          '/verify-data'
+        const loginRoute = ['/login', '/error-404', '/error-403', '/error-500',
+          ,'/1',
+          '/2',
+          '/3',
+          '/4',
+          '/5',
         ];
+
+        const adminRoutes = ['/verificar-registros', '/finalizar-proceso'];
+                this.showHeader = !loginRoute.includes(event.urlAfterRedirects);
         this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
 
-        const hideHeaderAndFooter = routesToHideHeaderAndFooter.includes(event.urlAfterRedirects);
-        this.showHeader = !hideHeaderAndFooter;
-        this.showFooter = !hideHeaderAndFooter;
+
+
+        //const hideHeaderAndFooter = routesToHideHeaderAndFooter.includes(event.urlAfterRedirects);
+        //this.showHeader = !hideHeaderAndFooter;
+        //this.showFooter = !hideHeaderAndFooter;
       }
     });
   }
