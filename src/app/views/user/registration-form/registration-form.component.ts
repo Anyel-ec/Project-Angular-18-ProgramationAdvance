@@ -88,6 +88,10 @@ export class RegistrationFormComponent implements OnInit {
     event.preventDefault();
     if (this.form.valid) {
       const datosFormulario = this.form.value;
+      datosFormulario.id_gender = parseInt(datosFormulario.id_gender, 10);
+      datosFormulario.id_province = parseInt(datosFormulario.id_province, 10);
+      datosFormulario.id_commandType = parseInt(datosFormulario.id_commandType, 10);
+
       this.saveRegister(datosFormulario);
     } else {
       this.form.markAllAsTouched();
