@@ -12,6 +12,7 @@ import localeEsExtra from '@angular/common/locales/extra/es';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { LoadDataService } from '../../../services/load-data.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RegisterService } from '../../../services/register.service';
 
 
 registerLocaleData(localeEs, 'es', localeEsExtra);
@@ -20,18 +21,21 @@ registerLocaleData(localeEs, 'es', localeEsExtra);
   selector: 'app-registration-form',
   standalone: true,
   imports: [FloatLabelModule, ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, CardImageComponent, HeaderComponent, CalendarModule, HttpClientModule],
-  providers: [FormBuilder, LoadDataService],
+  providers: [FormBuilder, LoadDataService, RegisterService],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss']
 })
 export class RegistrationFormComponent implements OnInit {
-  formGroup: any;
   form: FormGroup;
   provinces: any[] = [];
   genders: any[] = [];
   commandTypes: any[] = [];
 
-  constructor(private formBuilder: FormBuilder, private loadDataService: LoadDataService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private loadDataService: LoadDataService,
+    private registerService: RegisterService
+  ) {
     this.buildForm();
   }
 
@@ -43,16 +47,16 @@ export class RegistrationFormComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      cedula: new FormControl('', [Validators.required, this.validarCedulaEcuatoriana]),
-      nombreCompleto: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.validarNombreCompleto]),
-      fechaNacimiento: new FormControl('', [Validators.required, this.validarEdad(18, 50)]),
-      genero: new FormControl('', [Validators.required]),
-      provincia: new FormControl('', [Validators.required]),
-      tipoComando: new FormControl('', [Validators.required]),
-      telefono: ['', [Validators.required, Validators.pattern('[0-9]*'), this.validarNumeroCelular]],
-      correoElectronico: ['', [Validators.required, Validators.email, this.validarCorreoElectronico]],
-      direccion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
-      notaGrado: ['', [Validators.required, Validators.min(0), Validators.max(20), this.validarNotaGrado]]
+      identification: new FormControl('', [Validators.required, this.validarCedulaEcuatoriana]),
+      name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.validarNombreCompleto]),
+      birthdate: new FormControl('', [Validators.required, this.validarEdad(18, 50)]),
+      id_gender: new FormControl('', [Validators.required]),
+      id_province: new FormControl('', [Validators.required]),
+      id_commandType: new FormControl('', [Validators.required]),
+      phone: ['', [Validators.required, Validators.pattern('[0-9]*'), this.validarNumeroCelular]],
+      email: ['', [Validators.required, Validators.email, this.validarCorreoElectronico]],
+      address: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
+      gradeNote: ['', [Validators.required, Validators.min(0), Validators.max(20), this.validarNotaGrado]]
     });
   }
 
@@ -77,6 +81,40 @@ export class RegistrationFormComponent implements OnInit {
       this.commandTypes = data.data;
     }, error => {
       console.error('Error fetching command types:', error);
+    });
+  }
+
+  save(event: Event) {
+    event.preventDefault();
+    if (this.form.valid) {
+      const datosFormulario = this.form.value;
+      this.saveRegister(datosFormulario);
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
+
+  saveRegister(registerData: any) {
+    this.registerService.createOrUpdateRegister(registerData).subscribe(data => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Formulario Enviado',
+        text: 'El formulario se ha enviado con éxito.',
+        confirmButtonText: 'Aceptar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Limpiar el formulario
+          this.form.reset();
+        }
+      });
+    }, error => {
+      console.error('Error creating or updating register:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al enviar el formulario. Por favor, inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar'
+      });
     });
   }
 
@@ -230,29 +268,6 @@ export class RegistrationFormComponent implements OnInit {
   markAsTouched(controlName: string): void {
     const control = this.form.get(controlName);
     control?.markAsTouched();
-  }
-
-  save(event: Event) {
-    event.preventDefault();
-    if (this.form.valid) {
-      const datosFormulario = this.form.value;
-      console.log(datosFormulario);
-      // TODO : LOGICA PARA GUARDAR EN LA BASE DE DATOS
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Formulario Enviado',
-        text: 'El formulario se ha enviado con éxito.',
-        confirmButtonText: 'Aceptar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Limpiar el formulario
-          this.form.reset();
-        }
-      });
-    } else {
-      this.form.markAllAsTouched();
-    }
   }
 
   filterOnlyNumbers(event: Event): void {
