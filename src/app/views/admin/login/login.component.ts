@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+
   loginForm: FormGroup;
   hidePassword: boolean = true;
   validUsername = 'soyadmin';

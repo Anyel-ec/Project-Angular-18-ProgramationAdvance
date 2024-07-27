@@ -1,8 +1,6 @@
 <app-header></app-header>
 <app-card-image></app-card-image>
-<div
-  class="container d-flex justify-content-center align-items-center min-vh-100 mt-5"
->
+<div class="container d-flex justify-content-center align-items-center min-vh-100 mt-5">
   <div class="col-md-8">
     <form (ngSubmit)="save($event)" [formGroup]="form" class="formulario">
       <div class="formulario__text">
@@ -28,14 +26,8 @@
               pattern="[0-9]*"
               inputmode="numeric"
             />
-            <small *ngIf="getError('cedula', 'required')" class="text-danger"
-              >El campo es obligatorio</small
-            >
-            <small
-              *ngIf="getError('cedula', 'cedulaInvalida')"
-              class="text-danger"
-              >Cédula inválida</small
-            >
+            <small *ngIf="getError('cedula', 'required')" class="text-danger">El campo es obligatorio</small>
+            <small *ngIf="getError('cedula', 'cedulaInvalida')" class="text-danger">Cédula inválida</small>
           </div>
 
           <!-- Número de Celular -->
@@ -54,14 +46,8 @@
               }"
               pattern="[0-9]*"
             />
-            <small *ngIf="getError('telefono', 'required')" class="text-danger"
-              >El campo es obligatorio</small
-            >
-            <small
-              *ngIf="getError('telefono', 'telefonoInvalido')"
-              class="text-danger"
-              >Número de celular inválido</small
-            >
+            <small *ngIf="getError('telefono', 'required')" class="text-danger">El campo es obligatorio</small>
+            <small *ngIf="getError('telefono', 'telefonoInvalido')" class="text-danger">Número de celular inválido</small>
           </div>
         </div>
 
@@ -79,16 +65,8 @@
                 'is-valid': isValid('correoElectronico')
               }"
             />
-            <small
-              *ngIf="getError('correoElectronico', 'required')"
-              class="text-danger"
-              >El campo es obligatorio</small
-            >
-            <small
-              *ngIf="getError('correoElectronico', 'correoInvalido')"
-              class="text-danger"
-              >Correo electrónico inválido</small
-            >
+            <small *ngIf="getError('correoElectronico', 'required')" class="text-danger">El campo es obligatorio</small>
+            <small *ngIf="getError('correoElectronico', 'correoInvalido')" class="text-danger">Correo electrónico inválido</small>
           </div>
 
           <!-- Nombre Completo -->
@@ -107,35 +85,17 @@
                 'is-valid': isValid('nombreCompleto')
               }"
             />
-            <small
-              *ngIf="getError('nombreCompleto', 'required')"
-              class="text-danger"
-              >El campo es obligatorio</small
-            >
-            <small
-              *ngIf="getError('nombreCompleto', 'minlength')"
-              class="text-danger"
-              >El nombre debe tener al menos 3 caracteres</small
-            >
-            <small
-              *ngIf="getError('nombreCompleto', 'maxlength')"
-              class="text-danger"
-              >El nombre no puede exceder los 100 caracteres</small
-            >
-            <small
-              *ngIf="getError('nombreCompleto', 'nombreInvalido')"
-              class="text-danger"
-              >Nombre inválido</small
-            >
+            <small *ngIf="getError('nombreCompleto', 'required')" class="text-danger">El campo es obligatorio</small>
+            <small *ngIf="getError('nombreCompleto', 'minlength')" class="text-danger">El nombre debe tener al menos 3 caracteres</small>
+            <small *ngIf="getError('nombreCompleto', 'maxlength')" class="text-danger">El nombre no puede exceder los 100 caracteres</small>
+            <small *ngIf="getError('nombreCompleto', 'nombreInvalido')" class="text-danger">Nombre inválido</small>
           </div>
         </div>
 
         <div class="row">
           <!-- Fecha de Nacimiento -->
           <div class="col-md-6 form-group position-relative mb-3">
-            <label
-              >Fecha de Nacimiento<span class="text-danger">*</span>:</label
-            >
+            <label>Fecha de Nacimiento<span class="text-danger">*</span>:</label>
             <input
               type="date"
               class="form-control custom-date-input"
@@ -146,16 +106,8 @@
                 'is-valid': isValid('fechaNacimiento')
               }"
             />
-            <small
-              *ngIf="getError('fechaNacimiento', 'required')"
-              class="text-danger"
-              >El campo es obligatorio</small
-            >
-            <small
-              *ngIf="getError('fechaNacimiento', 'edadInvalida')"
-              class="text-danger"
-              >Debe tener al menos 18 años y menos de 50</small
-            >
+            <small *ngIf="getError('fechaNacimiento', 'required')" class="text-danger">El campo es obligatorio</small>
+            <small *ngIf="getError('fechaNacimiento', 'edadInvalida')" class="text-danger">Debe tener al menos 18 años y menos de 50</small>
           </div>
 
           <!-- Provincia -->
@@ -171,13 +123,9 @@
               }"
             >
               <option value="">Seleccione una provincia</option>
-              <option *ngFor="let provincia of provincias" [value]="provincia">
-                {{ provincia }}
-              </option>
+              <option *ngFor="let provincia of provinces" [value]="provincia._id">{{ provincia.nombre }}</option>
             </select>
-            <small *ngIf="getError('provincia', 'required')" class="text-danger"
-              >El campo es obligatorio</small
-            >
+            <small *ngIf="getError('provincia', 'required')" class="text-danger">El campo es obligatorio</small>
           </div>
         </div>
 
@@ -195,19 +143,9 @@
                 'is-valid': isValid('direccion')
               }"
             />
-            <small *ngIf="getError('direccion', 'required')" class="text-danger"
-              >El campo es obligatorio</small
-            >
-            <small
-              *ngIf="getError('direccion', 'minlength')"
-              class="text-danger"
-              >La dirección debe tener al menos 10 caracteres</small
-            >
-            <small
-              *ngIf="getError('direccion', 'maxlength')"
-              class="text-danger"
-              >La dirección no puede exceder los 100 caracteres</small
-            >
+            <small *ngIf="getError('direccion', 'required')" class="text-danger">El campo es obligatorio</small>
+            <small *ngIf="getError('direccion', 'minlength')" class="text-danger">La dirección debe tener al menos 10 caracteres</small>
+            <small *ngIf="getError('direccion', 'maxlength')" class="text-danger">La dirección no puede exceder los 100 caracteres</small>
           </div>
 
           <!-- Género -->
@@ -223,13 +161,9 @@
               }"
             >
               <option value="">Seleccione un género</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-              <option value="Otro">Otro</option>
+              <option *ngFor="let gender of genders" [value]="gender._id">{{ gender.name }}</option>
             </select>
-            <small *ngIf="getError('genero', 'required')" class="text-danger"
-              >El campo es obligatorio</small
-            >
+            <small *ngIf="getError('genero', 'required')" class="text-danger">El campo es obligatorio</small>
           </div>
         </div>
 
@@ -247,25 +181,14 @@
               }"
             >
               <option value="">Seleccione un comando</option>
-              <option value="Policía Nacional">Policía Nacional</option>
-              <option value="Policía de Tránsito">Policía de Tránsito</option>
-              <option value="Bombero">Bombero</option>
-              <option value="Militar">Militar</option>
-              <option value="Marin">Marin</option>
+              <option *ngFor="let commandType of commandTypes" [value]="commandType._id">{{ commandType.name }}</option>
             </select>
-            <small
-              *ngIf="getError('tipoComando', 'required')"
-              class="text-danger"
-              >El campo es obligatorio</small
-            >
+            <small *ngIf="getError('tipoComando', 'required')" class="text-danger">El campo es obligatorio</small>
           </div>
 
           <!-- Nota de Grado sobre 20 Pts -->
           <div class="col-md-6 form-group position-relative mb-3">
-            <label
-              >Nota de Grado sobre 20 Puntos<span class="text-danger">*</span
-              >:</label
-            >
+            <label>Nota de Grado sobre 20 Puntos<span class="text-danger">*</span>:</label>
             <input
               type="number"
               class="form-control"
@@ -278,15 +201,9 @@
               min="0"
               max="20"
             />
-            <small *ngIf="getError('notaGrado', 'required')" class="text-danger"
-              >El campo es obligatorio</small
-            >
-            <small *ngIf="getError('notaGrado', 'min')" class="text-danger"
-              >La nota debe ser mayor o igual a 0</small
-            >
-            <small *ngIf="getError('notaGrado', 'max')" class="text-danger"
-              >La nota no puede exceder los 20 puntos</small
-            >
+            <small *ngIf="getError('notaGrado', 'required')" class="text-danger">El campo es obligatorio</small>
+            <small *ngIf="getError('notaGrado', 'min')" class="text-danger">La nota debe ser mayor o igual a 0</small>
+            <small *ngIf="getError('notaGrado', 'max')" class="text-danger">La nota no puede exceder los 20 puntos</small>
           </div>
         </div>
 
@@ -300,10 +217,7 @@
                   siteKey="6LcCnvYpAAAAANhQwPdVNrZkKoHrdoUeURM5khPJ"
                 ></re-captcha>
               </div>
-              <div
-                *ngIf="!captchaValid && form.get('captcha')?.touched"
-                class="text-danger"
-              >
+              <div *ngIf="!captchaValid && form.get('captcha')?.touched" class="text-danger">
                 <small>Completa el reCAPTCHA</small>
               </div>
             </div>

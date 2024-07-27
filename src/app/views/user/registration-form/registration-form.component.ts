@@ -10,6 +10,8 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import localeEsExtra from '@angular/common/locales/extra/es';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { LoadDataService } from '../../../services/load-data.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 registerLocaleData(localeEs, 'es', localeEsExtra);
@@ -17,28 +19,26 @@ registerLocaleData(localeEs, 'es', localeEsExtra);
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [FloatLabelModule, ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, CardImageComponent, HeaderComponent, CalendarModule],
-  providers: [FormBuilder],
+  imports: [FloatLabelModule, ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, CardImageComponent, HeaderComponent, CalendarModule, HttpClientModule],
+  providers: [FormBuilder, LoadDataService],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss']
 })
 export class RegistrationFormComponent implements OnInit {
   formGroup: any;
   form: FormGroup;
-  provincias: string[] = [
-    "Azuay", "Bolívar", "Cañar", "Carchi", "Chimborazo", "Cotopaxi", "El Oro",
-    "Esmeraldas", "Galápagos", "Guayas", "Imbabura", "Loja", "Los Ríos",
-    "Manabí", "Morona Santiago", "Napo", "Orellana", "Pastaza", "Pichincha",
-    "Santa Elena", "Santo Domingo de los Tsáchilas", "Sucumbíos", "Tungurahua", "Zamora Chinchipe"
-  ];
+  provinces: any[] = [];
+  genders: any[] = [];
+  commandTypes: any[] = [];
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private loadDataService: LoadDataService) {
     this.buildForm();
-
   }
 
   ngOnInit(): void {
-
+    this.loadProvinces();
+    this.loadGenders();
+    this.loadCommandTypes();
   }
 
   private buildForm() {
@@ -56,14 +56,35 @@ export class RegistrationFormComponent implements OnInit {
     });
   }
 
+  private loadProvinces() {
+    this.loadDataService.getProvinces().subscribe(data => {
+      this.provinces = data.data;
+    }, error => {
+      console.error('Error fetching provinces:', error);
+    });
+  }
+
+  private loadGenders() {
+    this.loadDataService.getGender().subscribe(data => {
+      this.genders = data.data;
+    }, error => {
+      console.error('Error fetching genders:', error);
+    });
+  }
+
+  private loadCommandTypes() {
+    this.loadDataService.getCommandType().subscribe(data => {
+      this.commandTypes = data.data;
+    }, error => {
+      console.error('Error fetching command types:', error);
+    });
+  }
 
   captchaValid: boolean = false;
 
-  // Metodo para validar el captcha de Google
   resolved(captchaResponse: string | null) {
     this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
   }
-
 
   private validarNombreCompleto(control: AbstractControl): ValidationErrors | null {
     const nombre = control.value;
@@ -82,7 +103,6 @@ export class RegistrationFormComponent implements OnInit {
       return { nombreInvalido: true };
     }
   }
-
 
   private validarNotaGrado(control: AbstractControl): ValidationErrors | null {
     const nota = control.value;
@@ -125,8 +145,6 @@ export class RegistrationFormComponent implements OnInit {
     if (primerosDigitos !== '09' && primerosDigitos !== '08') {
       return { telefonoInvalido: true };
     }
-
-
 
     return null;
   }
@@ -193,7 +211,7 @@ export class RegistrationFormComponent implements OnInit {
       }
     };
   }
-  // Métodos para obtener errores de validación específicos
+
   getError(controlName: string, errorType: string) {
     const control = this.form.get(controlName);
     return control?.hasError(errorType) && control?.touched;
@@ -247,7 +265,3 @@ export class RegistrationFormComponent implements OnInit {
     input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]/g, '');
   }
 }
-function defineLocale(arg0: string, localeEs: (string | number | number[] | (string | undefined)[] | ((val: number) => number) | (string[] | undefined)[] | { AUD: (string | undefined)[]; BRL: (string | undefined)[]; BYN: (string | undefined)[]; CAD: (string | undefined)[]; CNY: (string | undefined)[]; EGP: never[]; ESP: string[]; GBP: (string | undefined)[]; HKD: (string | undefined)[]; ILS: (string | undefined)[]; INR: (string | undefined)[]; JPY: (string | undefined)[]; KRW: (string | undefined)[]; MXN: (string | undefined)[]; NZD: (string | undefined)[]; PHP: (string | undefined)[]; RON: (string | undefined)[]; THB: string[]; TWD: (string | undefined)[]; USD: string[]; XAF: never[]; XCD: (string | undefined)[]; XOF: never[]; } | undefined)[]) {
-  throw new Error('Function not implemented.');
-}
-
