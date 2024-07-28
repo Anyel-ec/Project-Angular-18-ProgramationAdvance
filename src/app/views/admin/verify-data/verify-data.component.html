@@ -52,7 +52,7 @@
         <td style="text-align: center">{{ rowData.provincia }}</td>
         <td style="text-align: center">{{ rowData.tipoCurso }}</td>
         <td style="text-align: center">
-          <p-tag *ngIf="rowData.estado === 'Aceptado'" icon="pi pi-check" severity="success" value="Aceptado"></p-tag>
+          <p-tag *ngIf="rowData.estado === 'Aprobado'" icon="pi pi-check" severity="success" value="Aceptado"></p-tag>
           <p-tag *ngIf="rowData.estado === 'Rechazado'" icon="pi pi-times" severity="danger" value="Rechazado"></p-tag>
           <p-tag *ngIf="rowData.estado === 'Pendiente'" icon="pi pi-spin pi-spinner" severity="warning" value="Pendiente"></p-tag>
         </td>

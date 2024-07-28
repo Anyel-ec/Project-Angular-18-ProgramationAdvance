@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormControl, Validators, FormsModule, FormGroup, FormBuilder, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormControl,
+  Validators,
+  FormsModule,
+  FormGroup,
+  FormBuilder,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
@@ -10,20 +19,30 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import localeEsExtra from '@angular/common/locales/extra/es';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { LoadDataService } from '../../../services/load-data.service';
+import { LoadDataService } from '../../../services/loadDataRegister/load-data.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { RegisterService } from '../../../services/register.service';
-
+import { RegisterService } from '../../../services/register/register.service';
 
 registerLocaleData(localeEs, 'es', localeEsExtra);
 
 @Component({
   selector: 'app-registration-form',
   standalone: true,
-  imports: [FloatLabelModule, ReactiveFormsModule, FormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule, CardImageComponent, HeaderComponent, CalendarModule, HttpClientModule],
+  imports: [
+    FloatLabelModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    CardImageComponent,
+    HeaderComponent,
+    CalendarModule,
+    HttpClientModule,
+  ],
   providers: [FormBuilder, LoadDataService, RegisterService],
   templateUrl: './registration-form.component.html',
-  styleUrls: ['./registration-form.component.scss']
+  styleUrls: ['./registration-form.component.scss'],
 })
 export class RegistrationFormComponent implements OnInit {
   form: FormGroup;
@@ -47,41 +66,86 @@ export class RegistrationFormComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      identification: new FormControl('', [Validators.required, this.validarCedulaEcuatoriana]),
-      name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.validarNombreCompleto]),
-      birthdate: new FormControl('', [Validators.required, this.validarEdad(18, 50)]),
+      identification: new FormControl('', [
+        Validators.required,
+        this.validarCedulaEcuatoriana,
+      ]),
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        this.validarNombreCompleto,
+      ]),
+      birthdate: new FormControl('', [
+        Validators.required,
+        this.validarEdad(18, 50),
+      ]),
       id_gender: new FormControl('', [Validators.required]),
       id_province: new FormControl('', [Validators.required]),
       id_commandType: new FormControl('', [Validators.required]),
-      phone: ['', [Validators.required, Validators.pattern('[0-9]*'), this.validarNumeroCelular]],
-      email: ['', [Validators.required, Validators.email, this.validarCorreoElectronico]],
-      address: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
-      gradeNote: ['', [Validators.required, Validators.min(0), Validators.max(20), this.validarNotaGrado]]
+      phone: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('[0-9]*'),
+          this.validarNumeroCelular,
+        ],
+      ],
+      email: [
+        '',
+        [Validators.required, Validators.email, this.validarCorreoElectronico],
+      ],
+      address: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(100),
+        ],
+      ],
+      gradeNote: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.max(20),
+          this.validarNotaGrado,
+        ],
+      ],
     });
   }
 
   private loadProvinces() {
-    this.loadDataService.getProvinces().subscribe(data => {
-      this.provinces = data.data;
-    }, error => {
-      console.error('Error fetching provinces:', error);
-    });
+    this.loadDataService.getProvinces().subscribe(
+      (data) => {
+        this.provinces = data.data;
+      },
+      (error) => {
+        console.error('Error fetching provinces:', error);
+      }
+    );
   }
 
   private loadGenders() {
-    this.loadDataService.getGender().subscribe(data => {
-      this.genders = data.data;
-    }, error => {
-      console.error('Error fetching genders:', error);
-    });
+    this.loadDataService.getGender().subscribe(
+      (data) => {
+        this.genders = data.data;
+      },
+      (error) => {
+        console.error('Error fetching genders:', error);
+      }
+    );
   }
 
   private loadCommandTypes() {
-    this.loadDataService.getCommandType().subscribe(data => {
-      this.commandTypes = data.data;
-    }, error => {
-      console.error('Error fetching command types:', error);
-    });
+    this.loadDataService.getCommandType().subscribe(
+      (data) => {
+        this.commandTypes = data.data;
+      },
+      (error) => {
+        console.error('Error fetching command types:', error);
+      }
+    );
   }
 
   save(event: Event) {
@@ -90,7 +154,10 @@ export class RegistrationFormComponent implements OnInit {
       const datosFormulario = this.form.value;
       datosFormulario.id_gender = parseInt(datosFormulario.id_gender, 10);
       datosFormulario.id_province = parseInt(datosFormulario.id_province, 10);
-      datosFormulario.id_commandType = parseInt(datosFormulario.id_commandType, 10);
+      datosFormulario.id_commandType = parseInt(
+        datosFormulario.id_commandType,
+        10
+      );
 
       this.saveRegister(datosFormulario);
     } else {
@@ -99,36 +166,41 @@ export class RegistrationFormComponent implements OnInit {
   }
 
   saveRegister(registerData: any) {
-    this.registerService.createOrUpdateRegister(registerData).subscribe(data => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Formulario Enviado',
-        text: 'El formulario se ha enviado con éxito.',
-        confirmButtonText: 'Aceptar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Limpiar el formulario
-          this.form.reset();
-        }
-      });
-    }, error => {
-      console.error('Error creating or updating register:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un problema al enviar el formulario. Por favor, inténtelo de nuevo.',
-        confirmButtonText: 'Aceptar'
-      });
-    });
+    this.registerService.createOrUpdateRegister(registerData).subscribe(
+      (data) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Formulario Enviado',
+          text: 'El formulario se ha enviado con éxito.',
+          confirmButtonText: 'Aceptar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Limpiar el formulario
+            this.form.reset();
+          }
+        });
+      },
+      (error) => {
+        console.error('Error creating or updating register:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al enviar el formulario. Por favor, inténtelo de nuevo.',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    );
   }
 
-  captchaValid: boolean = false;
+  // captchaValid: boolean = false;
 
-  resolved(captchaResponse: string | null) {
-    this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
-  }
+  // resolved(captchaResponse: string | null) {
+  //   this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
+  // }
 
-  private validarNombreCompleto(control: AbstractControl): ValidationErrors | null {
+  private validarNombreCompleto(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const nombre = control.value;
     if (!nombre) {
       return null;
@@ -138,7 +210,8 @@ export class RegistrationFormComponent implements OnInit {
       return { nombreInvalido: true };
     }
 
-    const expresionRegular = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]*$/;
+    const expresionRegular =
+      /^[a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]*$/;
     if (expresionRegular.test(nombre)) {
       return null;
     } else {
@@ -159,13 +232,16 @@ export class RegistrationFormComponent implements OnInit {
     return null;
   }
 
-  private validarCorreoElectronico(control: AbstractControl): ValidationErrors | null {
+  private validarCorreoElectronico(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const correo = control.value;
     if (!correo) {
       return null;
     }
 
-    const expresionRegular = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const expresionRegular =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     if (expresionRegular.test(correo)) {
       return null;
     } else {
@@ -173,7 +249,9 @@ export class RegistrationFormComponent implements OnInit {
     }
   }
 
-  private validarNumeroCelular(control: AbstractControl): ValidationErrors | null {
+  private validarNumeroCelular(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const telefono = control.value;
     if (!telefono) {
       return null;
@@ -191,7 +269,9 @@ export class RegistrationFormComponent implements OnInit {
     return null;
   }
 
-  private validarCedulaEcuatoriana(control: AbstractControl): ValidationErrors | null {
+  private validarCedulaEcuatoriana(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const cedula = control.value;
     if (!cedula) {
       return null;
@@ -207,7 +287,11 @@ export class RegistrationFormComponent implements OnInit {
     }
 
     const ultimoDigito = parseInt(cedula.substring(9, 10), 10);
-    const pares = parseInt(cedula.substring(1, 2), 10) + parseInt(cedula.substring(3, 4), 10) + parseInt(cedula.substring(5, 6), 10) + parseInt(cedula.substring(7, 8), 10);
+    const pares =
+      parseInt(cedula.substring(1, 2), 10) +
+      parseInt(cedula.substring(3, 4), 10) +
+      parseInt(cedula.substring(5, 6), 10) +
+      parseInt(cedula.substring(7, 8), 10);
     let impares = 0;
 
     for (let i = 0; i < 9; i += 2) {
@@ -240,12 +324,17 @@ export class RegistrationFormComponent implements OnInit {
 
       const fechaActual = new Date();
       const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
-      const diferenciaMeses = fechaActual.getMonth() - fechaNacimiento.getMonth();
+      const diferenciaMeses =
+        fechaActual.getMonth() - fechaNacimiento.getMonth();
       const diferenciaDias = fechaActual.getDate() - fechaNacimiento.getDate();
 
       if (
-        (edad > minEdad || (edad === minEdad && diferenciaMeses > 0) || (edad === minEdad && diferenciaMeses === 0 && diferenciaDias >= 0)) &&
-        (edad < maxEdad || (edad === maxEdad && diferenciaMeses < 0) || (edad === maxEdad && diferenciaMeses === 0 && diferenciaDias <= 0))
+        (edad > minEdad ||
+          (edad === minEdad && diferenciaMeses > 0) ||
+          (edad === minEdad && diferenciaMeses === 0 && diferenciaDias >= 0)) &&
+        (edad < maxEdad ||
+          (edad === maxEdad && diferenciaMeses < 0) ||
+          (edad === maxEdad && diferenciaMeses === 0 && diferenciaDias <= 0))
       ) {
         return null;
       } else {
@@ -281,6 +370,9 @@ export class RegistrationFormComponent implements OnInit {
 
   filterOnlyLetters(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]/g, '');
+    input.value = input.value.replace(
+      /[^a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]/g,
+      ''
+    );
   }
 }

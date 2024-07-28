@@ -1,126 +1,57 @@
 import { Component, OnInit } from '@angular/core';
 import { UPLOAD_IMPORTS } from './ImportsModule';
 import Swal from 'sweetalert2';
+import { VerifyDataService } from '../../../services/verifyData/verify-data.service';
+import { HttpClientModule } from '@angular/common/http';
 
-interface Curso {
-  id: number;
+interface verifyData {
+  id: string;
   cedula: string;
   nombresCompletos: string;
   genero: string;
   provincia: string;
   tipoCurso: string;
-  estado: string; // Nueva propiedad
+  estado: string; 
 }
 
 @Component({
   selector: 'app-verify-data',
   standalone: true,
-  imports: [UPLOAD_IMPORTS],
+  imports: [UPLOAD_IMPORTS, HttpClientModule],
   templateUrl: './verify-data.component.html',
   styleUrls: ['./verify-data.component.scss'],
-  providers: [],
+  providers: [VerifyDataService],
 })
 export class VerifyDataComponent implements OnInit {
 
-  data: Curso[] = [
-    {
-      id: 1,
-      cedula: '1234567890',
-      nombresCompletos: 'Juan Pérez',
-      genero: 'Masculino',
-      provincia: 'Pichincha',
-      tipoCurso: 'Policia Nacional',
-      estado: 'Pendiente', // Estado inicial
-    },
-    {
-      id: 2,
-      cedula: '0987654321',
-      nombresCompletos: 'María Gómez',
-      genero: 'Femenino',
-      provincia: 'Guayas',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente', // Estado inicial
-    },
-    {
-      id: 3,
-      cedula: '1234567890',
-      nombresCompletos: 'Carlos Pérez',
-      genero: 'Masculino',
-      provincia: 'Pichincha',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    },
-    {
-      id: 4,
-      cedula: '2345678901',
-      nombresCompletos: 'Ana Martínez',
-      genero: 'Femenino',
-      provincia: 'Manabí',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    },
-    {
-      id: 5,
-      cedula: '3456789012',
-      nombresCompletos: 'Jorge Rodríguez',
-      genero: 'Masculino',
-      provincia: 'Azuay',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    },
-    {
-      id: 6,
-      cedula: '4567890123',
-      nombresCompletos: 'Luisa Fernández',
-      genero: 'Femenino',
-      provincia: 'Loja',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    },
-    {
-      id: 7,
-      cedula: '5678901234',
-      nombresCompletos: 'David Morales',
-      genero: 'Masculino',
-      provincia: 'El Oro',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    },
-    {
-      id: 8,
-      cedula: '6789012345',
-      nombresCompletos: 'Laura Rivas',
-      genero: 'Femenino',
-      provincia: 'Tungurahua',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    },
-    {
-      id: 9,
-      cedula: '7890123456',
-      nombresCompletos: 'Pedro Castro',
-      genero: 'Masculino',
-      provincia: 'Imbabura',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    },
-    {
-      id: 10,
-      cedula: '8901234567',
-      nombresCompletos: 'Sofía Herrera',
-      genero: 'Femenino',
-      provincia: 'Chimborazo',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente'
-    }    
-  ];
-
+  data: verifyData[] = [];
   searchTerm: string = '';
-  filteredData: Curso[] = [];
-  Comprobante: boolean = false;
+  filteredData: verifyData[] = [];
+
+  constructor(private verifyDataService: VerifyDataService) {}
 
   ngOnInit(): void {
-    this.filteredData = this.data;
+    this.fetchData();
+  }
+
+  fetchData(): void {
+    this.verifyDataService.getRelationsVerifyData().subscribe(
+      (response) => {
+        this.data = response.map((item: any) => ({
+          id: item._id,
+          cedula: item.identification,
+          nombresCompletos: item.name,
+          genero: item.gender,
+          provincia: item.province,
+          tipoCurso: item.commandType,
+          estado: item.state
+        }));
+        this.filteredData = this.data;
+      },
+      (error) => {
+        console.error('Error al obtener los datos:', error);
+      }
+    );
   }
 
   filterData(): void {
@@ -131,7 +62,8 @@ export class VerifyDataComponent implements OnInit {
           curso.nombresCompletos.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           curso.genero.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           curso.provincia.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          curso.tipoCurso.toLowerCase().includes(this.searchTerm.toLowerCase())
+          curso.tipoCurso.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          curso.estado.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
       this.filteredData = this.data;
@@ -147,12 +79,18 @@ export class VerifyDataComponent implements OnInit {
     }
   }
 
-  verComprobante(rowData: Curso): void {
-    console.log('Ver comprobante de:', rowData);
-    this.Comprobante = true;
+  updateVerifyData(id: string, updatedData: any): void {
+    this.verifyDataService.updateVerifyData(id, updatedData).subscribe(
+      (response) => {
+        console.log('Dato actualizado:', response);
+      },
+      (error) => {
+        console.error('Error al actualizar el dato:', error);
+      }
+    );
   }
 
-  aceptar(rowData: Curso): void {
+  aceptar(rowData: verifyData): void {
     console.log('Aceptar:', rowData);
     Swal.fire({
       title: "¿Estás seguro?",
@@ -164,17 +102,34 @@ export class VerifyDataComponent implements OnInit {
       confirmButtonText: "Aceptar"
     }).then((result) => {
       if (result.isConfirmed) {
+        const updatedData = {
+          updated_at: new Date()
+        };
+        this.updateVerifyData(rowData.id, updatedData);
+
         Swal.fire({
           title: "Aspirante aceptado",
           text: "Se emitirá el correo de confirmación al aspirante.",
           icon: "success"
+        }).then(() => {
+          this.updateTable();
         });
-        rowData.estado = 'Aceptado'; // Actualiza el estado del aspirante
       }
     });
   }
 
-  rechazar(rowData: Curso): void {
+  deleteVerifyData(id: string): void {
+    this.verifyDataService.deleteVerifyData(id).subscribe(
+      (response) => {
+        console.log('Dato eliminado:', response);
+      },
+      (error) => {
+        console.error('Error al eliminar el dato:', error);
+      }
+    );
+  }
+
+  rechazar(rowData: verifyData): void {
     console.log('Declinar:', rowData);
     Swal.fire({
       title: "¿Estás seguro?",
@@ -186,13 +141,20 @@ export class VerifyDataComponent implements OnInit {
       confirmButtonText: "Rechazar"
     }).then((result) => {
       if (result.isConfirmed) {
+        this.deleteVerifyData(rowData.id); 
         Swal.fire({
           title: "Aspirante rechazado",
           text: "Se emitirá el correo al aspirante.",
           icon: "success"
+        }).then(() => {
+          this.updateTable();
         });
-        rowData.estado = 'Rechazado'; // Actualiza el estado del aspirante
       }
     });
+  }
+
+  updateTable(): void {
+    this.fetchData();
+    this.filterData();
   }
 }
