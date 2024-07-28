@@ -3,6 +3,7 @@ import { UPLOAD_IMPORTS } from './importsModule';
 import Swal from 'sweetalert2';
 import { VerifyDocumentService } from '../../../services/verifyDocument/verify-document.service';
 import { HttpClientModule } from '@angular/common/http';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 interface VerifiDocument {
   id: string;
@@ -13,6 +14,7 @@ interface VerifiDocument {
   documento: string;
   estadoVerificacion: string;
   estadoDocumento: string;
+  typeDocument: string;
 }
 
 @Component({
@@ -20,7 +22,7 @@ interface VerifiDocument {
   standalone: true,
   imports: [UPLOAD_IMPORTS, HttpClientModule],
   templateUrl: './end-process.component.html',
-  styleUrl: './end-process.component.scss',
+  styleUrls: ['./end-process.component.scss'],
   providers: [VerifyDocumentService],
 })
 export class EndProcessComponent implements OnInit {
@@ -30,8 +32,10 @@ export class EndProcessComponent implements OnInit {
   filteredData: VerifiDocument[] = [];
 
   Comprobante: boolean = false;
+  selectedDocumentUrl: SafeUrl = '';
+  selectedDocument: VerifiDocument | null = null;
 
-  constructor(private VerifyDocumentService: VerifyDocumentService) {}
+  constructor(private VerifyDocumentService: VerifyDocumentService, private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -49,6 +53,7 @@ export class EndProcessComponent implements OnInit {
           documento: item.document,
           estadoVerificacion: item.verifyDocumentState,
           estadoDocumento: item.uploadDocumentState,
+          typeDocument: item.typeDocument
         }));
         this.filteredData = this.data;
       },
@@ -93,6 +98,15 @@ export class EndProcessComponent implements OnInit {
 
   verComprobante(rowData: VerifiDocument): void {
     this.Comprobante = true;
+    this.selectedDocument = rowData;
+    console.log(rowData.documento);
+    console.log(rowData.typeDocument);
+    // Verifica y sanitiza la URL del documento
+    if (rowData.typeDocument.startsWith('image/')) {
+      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${rowData.typeDocument};base64,${rowData.documento}`);
+    } else {
+      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${rowData.typeDocument};base64,${rowData.documento}`);
+    }
   }
 
   updateVerifyData(id: string, updatedData: any): void {
