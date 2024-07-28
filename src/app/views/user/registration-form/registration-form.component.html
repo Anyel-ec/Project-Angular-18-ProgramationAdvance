@@ -210,7 +210,7 @@
         <div class="row">
           <div class="col-md-6 offset-md-3">
             <!-- recaptcha con la clave del sitio-->
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <div class="d-flex justify-content-center">
                 <re-captcha
                   (resolved)="resolved($event)"
@@ -220,15 +220,22 @@
               <div *ngIf="!captchaValid && form.get('captcha')?.touched" class="text-danger">
                 <small>Completa el reCAPTCHA</small>
               </div>
-            </div>
+            </div> -->
 
-            <button
+            <!-- <button
               class="btn btn-primary w-100"
               [disabled]="form.invalid || !captchaValid"
               type="submit"
             >
               ENVIAR
-            </button>
+            </button> -->
+            <button
+            class="btn btn-primary w-100"
+            [disabled]="form.invalid"
+            type="submit"
+          >
+            ENVIAR
+          </button>
           </div>
         </div>
       </div>

@@ -24,7 +24,6 @@
 
     <ng-template pTemplate="header">
       <tr style="text-align: center">
-        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
         <th pSortableColumn="cedula">
           Cédula <p-sortIcon field="cedula"></p-sortIcon>
         </th>
@@ -32,12 +31,12 @@
           Nombres Completos <p-sortIcon field="nombresCompletos"></p-sortIcon>
         </th>
         <th pSortableColumn="genero">
-          Género <p-sortIcon field="genero"></p-sortIcon>
+          Tipo de Curso <p-sortIcon field="genero"></p-sortIcon>
         </th>
         <th pSortableColumn="tipoCurso">
-          Tipo de Curso <p-sortIcon field="tipoCurso"></p-sortIcon>
+          Nota de Grado <p-sortIcon field="tipoCurso"></p-sortIcon>
         </th>
-        <th>Nota de Grado</th>
+        <th>Documento</th>
         <th pSortableColumn="estado">
           Estado <p-sortIcon field="estado"></p-sortIcon>
         </th>
@@ -47,42 +46,53 @@
 
     <ng-template pTemplate="body" let-rowData>
       <tr>
-        <td style="text-align: center">{{ rowData.id }}</td>
         <td style="text-align: center">{{ rowData.cedula }}</td>
         <td style="text-align: center">{{ rowData.nombresCompletos }}</td>
-        <td style="text-align: center">{{ rowData.genero }}</td>
         <td style="text-align: center">{{ rowData.tipoCurso }}</td>
+        <td style="text-align: center">{{ rowData.notaGrado }}</td>
         <td style="text-align: center">
-          <button
+          <p-tag
+            *ngIf="rowData.estadoDocumento === 'Pendiente'"
+            icon="pi pi-file"
+            severity="warning"
+            value="Pendiente"
+          ></p-tag>
+          <!-- <p-tag
+            *ngIf="rowData.estadoDocumento === 'Aprobado'"
+            icon="pi pi-file-check"
+            severity="warning"
+            value="Pendiente"
+          ></p-tag> -->
+          <!-- <button
             class="btn_search"
             type="button"
             (click)="verComprobante(rowData)"
           >
             <i class="pi pi-search" style="font-size: 1rem"></i>
-          </button>
+          </button> -->
         </td>
         <td style="text-align: center">
           <p-tag
-            *ngIf="rowData.estado === 'Pendiente'"
+            *ngIf="rowData.estadoVerificacion === 'Pendiente'"
             icon="pi pi-spin pi-spinner"
             severity="warning"
             value="Pendiente"
           ></p-tag>
           <p-tag
-            *ngIf="rowData.estado === 'Aceptado'"
+            *ngIf="rowData.estadoVerificacion === 'Aprobado'"
             icon="pi pi-verified"
             severity="success"
             value="Aceptado"
           ></p-tag>
           <p-tag
-            *ngIf="rowData.estado === 'Rechazado'"
+            *ngIf="rowData.estadoVerificacion === 'Rechazado'"
             icon="pi pi-times-circle"
             severity="danger"
             value="Rechazado"
           ></p-tag>
         </td>
         <td style="text-align: center">
-          <div *ngIf="rowData.estado === 'Pendiente'">
+          <div *ngIf="rowData.estadoVerificacion === 'Pendiente'">
             <button class="btn_success" (click)="aceptar(rowData)">
               <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
             </button>
@@ -92,12 +102,27 @@
             </button>
           </div>
 
-          <div *ngIf="rowData.estado === 'Aceptado' || rowData.estado === 'Rechazado'">
-            <button class="btn_success" (click)="aceptar(rowData)" style="cursor:  not-allowed;" disabled>
+          <div
+            *ngIf="
+              rowData.estadoVerificacion === 'Aprobado' ||
+              rowData.estadoVerificacion === 'Rechazado'
+            "
+          >
+            <button
+              class="btn_success"
+              (click)="aceptar(rowData)"
+              style="cursor: not-allowed"
+              disabled
+            >
               <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
             </button>
 
-            <button class="btn_success" (click)="rechazar(rowData)" style="cursor:  not-allowed;" disabled>
+            <button
+              class="btn_success"
+              (click)="rechazar(rowData)"
+              style="cursor: not-allowed"
+              disabled
+            >
               <p-tag icon="pi pi-times" severity="danger" value="Rechazar" />
             </button>
           </div>

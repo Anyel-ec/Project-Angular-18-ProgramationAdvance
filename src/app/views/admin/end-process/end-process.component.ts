@@ -1,113 +1,61 @@
 import { Component, OnInit } from '@angular/core';
 import { UPLOAD_IMPORTS } from './importsModule';
 import Swal from 'sweetalert2';
+import { VerifyDocumentService } from '../../../services/verifyDocument/verify-document.service';
+import { HttpClientModule } from '@angular/common/http';
 
-interface Curso {
-  id: number;
+interface VerifiDocument {
+  id: string;
   cedula: string;
   nombresCompletos: string;
-  genero: string;
   tipoCurso: string;
-  estado: 'Pendiente' | 'Aceptado' | 'Rechazado' ;
+  notaGrado: number;
+  documento: string;
+  estadoVerificacion: string;
+  estadoDocumento: string;
 }
 
 @Component({
   selector: 'app-end-process',
   standalone: true,
-  imports: [UPLOAD_IMPORTS],
+  imports: [UPLOAD_IMPORTS, HttpClientModule],
   templateUrl: './end-process.component.html',
   styleUrl: './end-process.component.scss',
+  providers: [VerifyDocumentService],
 })
 export class EndProcessComponent implements OnInit {
-  data: Curso[] = [
-    {
-      id: 1,
-      cedula: '1234567890',
-      nombresCompletos: 'Juan Pérez',
-      genero: 'Masculino',
-      tipoCurso: 'Policia Nacional',
-      estado: 'Pendiente',
-    },
-    {
-      id: 2,
-      cedula: '0987654321',
-      nombresCompletos: 'María Gómez',
-      genero: 'Femenino',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente',
-    },
-    {
-      id: 3,
-      cedula: '1122334455',
-      nombresCompletos: 'Carlos Sánchez',
-      genero: 'Masculino',
-      tipoCurso: 'Bombero',
-      estado: 'Pendiente',
-    },
-    {
-      id: 4,
-      cedula: '5566778899',
-      nombresCompletos: 'Ana Martínez',
-      genero: 'Femenino',
-      tipoCurso: 'Militar',
-      estado: 'Pendiente',
-    },
-    {
-      id: 5,
-      cedula: '6677889900',
-      nombresCompletos: 'Pedro Fernández',
-      genero: 'Masculino',
-      tipoCurso: 'Policia',
-      estado: 'Pendiente',
-    },
-    {
-      id: 6,
-      cedula: '1112223334',
-      nombresCompletos: 'Luis González',
-      genero: 'Masculino',
-      tipoCurso: 'Marin',
-      estado: 'Pendiente',
-    },
-    {
-      id: 7,
-      cedula: '5554443332',
-      nombresCompletos: 'Laura Rodríguez',
-      genero: 'Femenino',
-      tipoCurso: 'Policia Nacional',
-      estado: 'Pendiente',
-    },
-    {
-      id: 8,
-      cedula: '9998887776',
-      nombresCompletos: 'Roberto Jiménez',
-      genero: 'Masculino',
-      tipoCurso: 'Policia de Transito',
-      estado: 'Pendiente',
-    },
-    {
-      id: 9,
-      cedula: '3332221110',
-      nombresCompletos: 'Sofía Ramírez',
-      genero: 'Femenino',
-      tipoCurso: 'Bombero',
-      estado: 'Pendiente',
-    },
-    {
-      id: 10,
-      cedula: '7776665558',
-      nombresCompletos: 'Daniel López',
-      genero: 'Masculino',
-      tipoCurso: 'Militar',
-      estado: 'Pendiente',
-    },
-  ];
 
+  data: VerifiDocument[] = [];
   searchTerm: string = '';
-  filteredData: Curso[] = [];
+  filteredData: VerifiDocument[] = [];
+
   Comprobante: boolean = false;
 
+  constructor(private VerifyDocumentService: VerifyDocumentService) {}
+
   ngOnInit(): void {
-    this.filteredData = this.data;
+    this.fetchData();
+  }
+
+  fetchData(): void {
+    this.VerifyDocumentService.getRelationsVerifyDocument().subscribe(
+      (response) => {
+        this.data = response.map((item: any) => ({
+          id: item._id,
+          cedula: item.identification,
+          nombresCompletos: item.name,
+          tipoCurso: item.commandType,
+          notaGrado: item.gradeNote,
+          documento: item.document,
+          estadoVerificacion: item.verifyDocumentState,
+          estadoDocumento: item.uploadDocumentState,
+        }));
+        this.filteredData = this.data;
+      },
+      (error) => {
+        console.error('Error al obtener los datos:', error);
+      }
+    );
   }
 
   filterData(): void {
@@ -119,9 +67,15 @@ export class EndProcessComponent implements OnInit {
           curso.nombresCompletos
             .toLowerCase()
             .includes(this.searchTerm.toLowerCase()) ||
-          curso.genero.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          curso.tipoCurso.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          curso.estado.toLowerCase().includes(this.searchTerm.toLowerCase())
+          curso.tipoCurso
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          curso.estadoVerificacion
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          curso.estadoDocumento
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
       );
     } else {
       this.filteredData = this.data;
@@ -137,12 +91,23 @@ export class EndProcessComponent implements OnInit {
     }
   }
 
-  verComprobante(rowData: Curso): void {
+  verComprobante(rowData: VerifiDocument): void {
     this.Comprobante = true;
   }
 
-  aceptar(rowData: Curso): void {
-    if (rowData.estado === 'Pendiente') {
+  updateVerifyData(id: string, updatedData: any): void {
+    this.VerifyDocumentService.updateVerifyDocument(id, updatedData).subscribe(
+      (response) => {
+        console.log('Dato actualizado:', response);
+      },
+      (error) => {
+        console.error('Error al actualizar el dato:', error);
+      }
+    );
+  }
+
+  aceptar(rowData: VerifiDocument): void {
+    if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
         title: 'Estas seguro?',
         text: 'Se aceptará la inscripcion del aspirante.',
@@ -153,18 +118,24 @@ export class EndProcessComponent implements OnInit {
         confirmButtonText: 'Aceptar',
       }).then((result) => {
         if (result.isConfirmed) {
+          const updatedData = {
+            updated_at: new Date()
+          };
+          this.updateVerifyData(rowData.id, updatedData);
           Swal.fire({
             title: 'Inscripcion aceptada',
             text: 'Se emitira el correo de confirmación al aspirante.',
             icon: 'success',
+          }).then(() => {
+            this.updateTable();
           });
-          rowData.estado = 'Aceptado';
         }
       });
     }
   }
-  rechazar(rowData: Curso): void {
-    if (rowData.estado === 'Pendiente') {
+
+  rechazar(rowData: VerifiDocument): void {
+    if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
         title: 'Estas seguro?',
         text: 'Se rechazara la inscripcion del aspirante.',
@@ -179,10 +150,16 @@ export class EndProcessComponent implements OnInit {
             title: 'Inscripcion rechazada',
             text: 'Se emitira el correo al aspirante.',
             icon: 'success',
+          }).then(() => {
+            this.updateTable();
           });
-          rowData.estado = 'Rechazado';
         }
       });
     }
+  }
+
+  updateTable(): void {
+    this.fetchData();
+    this.filterData();
   }
 }

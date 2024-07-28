@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LoadDataService } from './load-data.service';
+import { LoadDataService } from '../loadDataRegister/load-data.service';
 
 describe('LoadDataService', () => {
   let service: LoadDataService;
