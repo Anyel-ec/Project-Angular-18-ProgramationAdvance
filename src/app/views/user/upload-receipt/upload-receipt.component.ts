@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -9,24 +9,38 @@ import {
 } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
+import { ActivatedRoute } from '@angular/router';
+import { UploadDocumentService } from '../../../services/uploadDocument/upload-document.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-upload-receipt',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule, HttpClientModule],
   templateUrl: './upload-receipt.component.html',
   styleUrls: ['./upload-receipt.component.scss'],
+  providers: [UploadDocumentService],
 })
-export class UploadReceiptComponent {
+export class UploadReceiptComponent implements OnInit{
   fileUrl: SafeResourceUrl | null = null;
   isImage: boolean = false;
   form: FormGroup;
 
+  id: string | null;
+  selectedFile: File | null = null;  
+
+
   constructor(
     private sanitizer: DomSanitizer,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private uploadDocumentService: UploadDocumentService
   ) {
     this.buildForm();
+  }
+
+  ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id');
   }
 
   private buildForm() {
@@ -37,6 +51,7 @@ export class UploadReceiptComponent {
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
+    this.selectedFile = file;
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -53,22 +68,34 @@ export class UploadReceiptComponent {
     this.fileUrl = null;
     this.isImage = false;
     this.form.get('file')?.reset();
+    this.selectedFile = null;
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Documento Enviado',
-        text: 'El documento se ha enviado con éxito.',
-        confirmButtonText: 'Aceptar',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.fileUrl = null;
-          this.isImage = false;
-          this.form.get('file')?.reset();
+    if (this.form.valid && this.selectedFile && this.id) {
+      this.uploadDocumentService.updateVerifyDocument(this.id, this.selectedFile).subscribe(
+        response => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Documento Enviado',
+            text: 'El documento se ha enviado con éxito.',
+            confirmButtonText: 'Aceptar',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.clearFile();
+            }
+          });
+        },
+        error => {
+          console.error('Error updating document', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al enviar el documento. Por favor, intente nuevamente.',
+            confirmButtonText: 'Aceptar',
+          });
         }
-      });
+      );
     } else {
       this.form.markAllAsTouched();
       Swal.fire({
