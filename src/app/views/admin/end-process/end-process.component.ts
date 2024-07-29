@@ -148,6 +148,17 @@ export class EndProcessComponent implements OnInit {
     }
   }
 
+  deleteVerifyDocument(id: string): void {
+    this.VerifyDocumentService.deleteVerifyDocument(id).subscribe(
+      (response) => {
+        console.log('Dato eliminado:', response);
+      },
+      (error) => {
+        console.error('Error al eliminar el dato:', error);
+      }
+    );
+  }
+
   rechazar(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
@@ -160,6 +171,7 @@ export class EndProcessComponent implements OnInit {
         confirmButtonText: 'Rechazar',
       }).then((result) => {
         if (result.isConfirmed) {
+          this.deleteVerifyDocument(rowData.id);
           Swal.fire({
             title: 'Inscripcion rechazada',
             text: 'Se emitira el correo al aspirante.',
