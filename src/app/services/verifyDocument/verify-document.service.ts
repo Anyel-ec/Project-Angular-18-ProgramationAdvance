@@ -22,5 +22,10 @@ export class VerifyDocumentService {
     const updateUrl = `${this.url}/${id}`;
     return this.http.put(updateUrl, updatedData);
   }
+
+  deleteVerifyDocument(id: string): Observable<any> {
+    const deleteUrl = `${this.url}/${id}`;
+    return this.http.delete(deleteUrl);
+  }
   
 }
