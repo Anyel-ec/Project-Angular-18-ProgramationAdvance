@@ -192,11 +192,11 @@ export class RegistrationFormComponent implements OnInit {
     );
   }
 
-  // captchaValid: boolean = false;
+  captchaValid: boolean = false;
 
-  // resolved(captchaResponse: string | null) {
-  //   this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
-  // }
+  resolved(captchaResponse: string | null) {
+    this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
+  }
 
   private validarNombreCompleto(
     control: AbstractControl
