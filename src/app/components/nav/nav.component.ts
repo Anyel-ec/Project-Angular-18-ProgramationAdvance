@@ -26,13 +26,13 @@ export class NavComponent {
         icon: 'pi pi-fw pi-address-book',
         routerLink: ['/registro-aspirantes'],
       },
-      {
+      /*{
         label: 'Envio Nota de Grado',
         icon: 'pi pi-fw pi-upload',
         routerLink: ['/subir-recibo'],
-      },
+      },*/
       {
-        label: 'Admin',
+        label: 'Iniciar Sesión ',
         icon: 'pi pi-fw pi-user',
         routerLink: ['/login'],
       },
