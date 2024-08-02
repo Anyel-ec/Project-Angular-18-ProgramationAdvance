@@ -27,5 +27,4 @@ export class VerifyDocumentService {
     const deleteUrl = `${this.url}/${id}`;
     return this.http.delete(deleteUrl);
   }
-
 }
