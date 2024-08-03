@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterService {
   private baseUrl = 'http://localhost:3001/api/registers';
@@ -30,8 +30,14 @@ export class RegisterService {
     return this.http.put(`${this.baseUrl}/${id}`, data);
   }
 
-  updateRegisterByIdentification(identification: string, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/identification/${identification}`, data);
+  updateRegisterByIdentification(
+    identification: string,
+    data: any
+  ): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/identification/${identification}`,
+      data
+    );
   }
 
   deleteRegister(id: string): Observable<any> {

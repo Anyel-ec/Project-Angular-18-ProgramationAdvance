@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { UploadDocumentService } from '../../../services/uploadDocument/upload-document.service';
 import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload-receipt',
@@ -34,7 +35,8 @@ export class UploadReceiptComponent implements OnInit{
     private sanitizer: DomSanitizer,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private uploadDocumentService: UploadDocumentService
+    private uploadDocumentService: UploadDocumentService,
+    private router: Router
   ) {
     this.buildForm();
   }
@@ -78,11 +80,12 @@ export class UploadReceiptComponent implements OnInit{
           Swal.fire({
             icon: 'success',
             title: 'Documento Enviado',
-            text: 'El documento se ha enviado con éxito.',
+            text: 'El documento se ha enviado con éxito, sera redirigido a la página principal.',
             confirmButtonText: 'Aceptar',
           }).then((result) => {
             if (result.isConfirmed) {
               this.clearFile();
+              this.router.navigate(['']);
             }
           });
         },

@@ -17,7 +17,7 @@ import { NavAdminComponent } from './components/nav-admin/nav-admin.component';
     RegistrationFormComponent,
     NavComponent,
     FooterComponent,
-    NavAdminComponent
+    NavAdminComponent,
   ],
 
   templateUrl: './app.component.html',
@@ -29,27 +29,17 @@ export class AppComponent {
   isAdmin: boolean = false;
   showFooter: boolean = true;
 
-
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const loginRoute = ['/login', '/error-404', '/error-403', '/error-500',
-          ,'/1',
-          '/2',
-          '/3',
-          '/4',
-          '/5',
-        ];
-
+        const loginRoute = ['/login', '/error-404'];
         const adminRoutes = ['/verificar-registros', '/finalizar-proceso'];
-                this.showHeader = !loginRoute.includes(event.urlAfterRedirects);
-        this.isAdmin = adminRoutes.some(route => event.urlAfterRedirects.startsWith(route));
+        const uploadReceiptRoute = '/subir-recibo/';
 
-
-
-        //const hideHeaderAndFooter = routesToHideHeaderAndFooter.includes(event.urlAfterRedirects);
-        //this.showHeader = !hideHeaderAndFooter;
-        //this.showFooter = !hideHeaderAndFooter;
+        const currentUrl = event.urlAfterRedirects;
+        this.showHeader = !loginRoute.includes(currentUrl) && !currentUrl.startsWith(uploadReceiptRoute);
+        this.showFooter = !loginRoute.includes(currentUrl) && !currentUrl.startsWith(uploadReceiptRoute);
+        this.isAdmin = adminRoutes.some(route => currentUrl.startsWith(route));
       }
     });
   }

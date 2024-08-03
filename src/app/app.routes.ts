@@ -34,10 +34,6 @@ export const routes: Routes = [
     redirectTo: '/registro-aspirantes',
     pathMatch: 'full',
   },
-  {
-    path: 'error-404',
-    component: Error404Component,
-  },
   { path: '**', 
     redirectTo: '/error-404' 
   }
