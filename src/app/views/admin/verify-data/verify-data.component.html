@@ -52,17 +52,48 @@
         <td style="text-align: center">{{ rowData.provincia }}</td>
         <td style="text-align: center">{{ rowData.tipoCurso }}</td>
         <td style="text-align: center">
-          <p-tag *ngIf="rowData.estado === 'Aprobado'" icon="pi pi-check" severity="success" value="Aceptado"></p-tag>
-          <p-tag *ngIf="rowData.estado === 'Rechazado'" icon="pi pi-times" severity="danger" value="Rechazado"></p-tag>
-          <p-tag *ngIf="rowData.estado === 'Pendiente'" icon="pi pi-spin pi-spinner" severity="warning" value="Pendiente"></p-tag>
+          <p-tag
+            *ngIf="rowData.estado === 'Aprobado'"
+            icon="pi pi-check"
+            severity="success"
+            value="Aceptado"
+          ></p-tag>
+          <p-tag
+            *ngIf="rowData.estado === 'Rechazado'"
+            icon="pi pi-times"
+            severity="danger"
+            value="Rechazado"
+          ></p-tag>
+          <p-tag
+            *ngIf="rowData.estado === 'Pendiente'"
+            icon="pi pi-spin pi-spinner"
+            severity="warning"
+            value="Pendiente"
+          ></p-tag>
         </td>
         <td style="text-align: center">
-          <button class="btn_success" (click)="aceptar(rowData)" [disabled]="rowData.estado !== 'Pendiente'">
-            <p-tag icon="pi pi-check" severity="success" value="Aceptar"></p-tag>
+          <button
+            class="btn_success"
+            (click)="aceptar(rowData)"
+            [disabled]="rowData.estado !== 'Pendiente'"
+          >
+            <p-tag
+              icon="pi pi-check"
+              severity="success"
+              value="Aceptar"
+            ></p-tag>
           </button>
 
-          <button class="btn_danger" (click)="rechazar(rowData)" [disabled]="rowData.estado !== 'Pendiente'">
-            <p-tag icon="pi pi-times" severity="danger" value="Rechazar"></p-tag>
+          <button
+            class="btn_danger"
+            (click)="rechazar(rowData)"
+            [disabled]="rowData.estado !== 'Pendiente'"
+          >
+            <p-tag
+              icon="pi pi-times"
+              severity="danger"
+              value="Rechazar"
+            ></p-tag>
           </button>
         </td>
       </tr>

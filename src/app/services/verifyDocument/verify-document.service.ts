@@ -27,4 +27,11 @@ export class VerifyDocumentService {
     const deleteUrl = `${this.url}/${id}`;
     return this.http.delete(deleteUrl);
   }
+  
+  updateUploadDocumentAgain(id: string): Observable<any> {
+    const updateUrl = `${this.url}/again/${id}`;
+    return this.http.put(updateUrl,id);
+  }
+  
+
 }

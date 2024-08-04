@@ -184,6 +184,41 @@ export class EndProcessComponent implements OnInit {
     }
   }
 
+  reenviarEnlace(id: string): void {
+    this.VerifyDocumentService.updateUploadDocumentAgain(id).subscribe(
+      (response) => {
+        console.log('Correo Reenviado:', response);
+      },
+      (error) => {
+        console.error('Error al reeviar el correo:', error);
+      }
+    );
+  }
+
+  reenviarEnlaceAlert(rowData: VerifiDocument): void {
+    if (rowData.estadoVerificacion === 'Pendiente') {
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Se reenviará el enlace para que el aspirante suba el documento nuevamente.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Reenviar enlace',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.reenviarEnlace(rowData.id);
+          Swal.fire({
+            title: 'Enlace reenviado',
+            text: 'Se ha enviado el correo al aspirante con el enlace para subir el documento.',
+            icon: 'success'
+          });
+        }
+      });
+    }
+  }
+  
   updateTable(): void {
     this.fetchData();
     this.filterData();
