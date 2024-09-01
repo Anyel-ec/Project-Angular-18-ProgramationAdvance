@@ -159,11 +159,22 @@ export class RegistrationFormComponent implements OnInit {
         10
       );
 
-      this.saveRegister(datosFormulario);
+      // Verificar la nota de grado
+      if (datosFormulario.gradeNote < 14) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Nota Baja',
+          text: 'La nota de grado es menor a 14. Los aspirantes deben tener un mínimo de 14 puntos para postularse.',
+          confirmButtonText: 'Aceptar',
+        });
+      } else {
+        this.saveRegister(datosFormulario);
+      }
     } else {
       this.form.markAllAsTouched();
     }
   }
+
 
   saveRegister(registerData: any) {
     this.registerService.createOrUpdateRegister(registerData).subscribe(
