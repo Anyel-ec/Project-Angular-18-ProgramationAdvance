@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class LoadDataService {
 
-  private baseUrl = 'http://localhost:3001/api/load';
+  private baseUrl = 'http://34.127.73.228:3001/api/load';
 
   constructor(private http: HttpClient) {}
 

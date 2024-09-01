@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfigService {
-  private baseUrl: string = 'http://localhost:3001/';
+  private baseUrl: string = 'http://34.127.73.228:3001/';
 
   getBaseUrl(): string {
     return this.baseUrl;
