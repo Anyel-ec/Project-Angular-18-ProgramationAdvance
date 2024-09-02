@@ -7,7 +7,7 @@ import { map, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = 'http://localhost:3001/api'; // Cambia esto a tu URL de la API
+  private apiUrl = 'http://34.127.73.228:3001/api'; // Cambia esto a tu URL de la API
 
   constructor(private http: HttpClient) { }
 

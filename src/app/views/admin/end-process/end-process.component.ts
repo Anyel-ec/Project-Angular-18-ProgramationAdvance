@@ -190,10 +190,11 @@ export class EndProcessComponent implements OnInit {
         console.log('Correo Reenviado:', response);
       },
       (error) => {
-        console.error('Error al reeviar el correo:', error);
+        console.error('Error al reenviar el correo:', error);
       }
     );
   }
+  
 
   reenviarEnlaceAlert(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
