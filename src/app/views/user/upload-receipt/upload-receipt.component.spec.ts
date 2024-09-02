@@ -44,10 +44,6 @@ describe('UploadReceiptComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should build form', () => {
-    expect(component.form).toBeDefined();
-    expect(component.form.get('file')).toBeDefined();
-  });
 
   it('should handle file selection', () => {
     const mockFile = new File([''], 'test.png', { type: 'image/png' });
@@ -74,40 +70,24 @@ describe('UploadReceiptComponent', () => {
     expect(true).toBeTrue();
   });
 
-  it('should handle submit error', () => {
+  it('should submit form with error when file is not selected', () => {
     spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
-    component.selectedFile = new File([''], 'test.pdf', { type: 'application/pdf' });
     component.id = '123';
     uploadDocumentService.updateVerifyDocument.and.returnValue(of({}));
-    try {
-      component.onSubmit();
-    } catch (error) {
-      console.log('Error capturado y ignorado');
-    }
-    expect(true).toBe(true);
-  });
-
-  it('should handle invalid form submission', () => {
-    spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
-    component.onSubmit();
-    expect(Swal.fire).toHaveBeenCalled();
-    expect(true).toBe(true);
-  });
-
-   
-
-  it('should not proceed if form is invalid or file/id is missing', () => {
-    spyOn(component.form, 'markAllAsTouched');
-    spyOn(Swal, 'fire');
-    
-    component.selectedFile = null;
-    component.id = null;
-    component.form.patchValue({ file: null });
-    
     component.onSubmit();
     
-    expect(component.form.markAllAsTouched).toHaveBeenCalled();
-    expect(true).toBe(true);
-
+    const expectedAlert = {
+      icon: 'warning',
+      title: 'Error',
+      text: 'Por favor, suba el documento antes de enviar.',
+      confirmButtonText: 'Aceptar',
+    };
+  
+    expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining(expectedAlert));
+    expect(uploadDocumentService.updateVerifyDocument).not.toHaveBeenCalled();
+    expect(component['router'].navigate).not.toHaveBeenCalled();
   });
+  
+  
+  
 });

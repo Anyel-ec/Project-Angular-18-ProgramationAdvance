@@ -110,16 +110,9 @@ export class EndProcessComponent implements OnInit {
   }
 
   updateVerifyData(id: string, updatedData: any): void {
-    this.VerifyDocumentService.updateVerifyDocument(id, updatedData).subscribe(
-      (response) => {
-        console.log('Dato actualizado:', response);
-      },
-      (error) => {
-        console.error('Error al actualizar el dato:', error);
-      }
-    );
+    this.VerifyDocumentService.updateVerifyDocument(id, updatedData).subscribe();
   }
-
+  
   aceptar(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
@@ -149,14 +142,7 @@ export class EndProcessComponent implements OnInit {
   }
 
   deleteVerifyDocument(id: string): void {
-    this.VerifyDocumentService.deleteVerifyDocument(id).subscribe(
-      (response) => {
-        console.log('Dato eliminado:', response);
-      },
-      (error) => {
-        console.error('Error al eliminar el dato:', error);
-      }
-    );
+    this.VerifyDocumentService.deleteVerifyDocument(id).subscribe();
   }
 
   rechazar(rowData: VerifiDocument): void {
@@ -195,7 +181,6 @@ export class EndProcessComponent implements OnInit {
     );
   }
   
-
   reenviarEnlaceAlert(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
