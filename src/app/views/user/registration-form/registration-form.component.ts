@@ -51,7 +51,7 @@ export class RegistrationFormComponent implements OnInit {
   commandTypes: any[] = [];
 
   constructor(
-    private formBuilder: FormBuilder,
+    public formBuilder: FormBuilder,
     private loadDataService: LoadDataService,
     private registerService: RegisterService
   ) {
@@ -64,7 +64,7 @@ export class RegistrationFormComponent implements OnInit {
     this.loadCommandTypes();
   }
 
-  private buildForm() {
+  public buildForm() {
     this.form = this.formBuilder.group({
       identification: new FormControl('', [
         Validators.required,
@@ -115,7 +115,7 @@ export class RegistrationFormComponent implements OnInit {
     });
   }
 
-  private loadProvinces() {
+  public loadProvinces() {
     this.loadDataService.getProvinces().subscribe(
       (data) => {
         this.provinces = data.data;
@@ -126,7 +126,7 @@ export class RegistrationFormComponent implements OnInit {
     );
   }
 
-  private loadGenders() {
+  public loadGenders() {
     this.loadDataService.getGender().subscribe(
       (data) => {
         this.genders = data.data;
@@ -137,7 +137,7 @@ export class RegistrationFormComponent implements OnInit {
     );
   }
 
-  private loadCommandTypes() {
+  public loadCommandTypes() {
     this.loadDataService.getCommandType().subscribe(
       (data) => {
         this.commandTypes = data.data;
@@ -209,11 +209,16 @@ export class RegistrationFormComponent implements OnInit {
      this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
    }
 
-  private validarNombreCompleto(
+  public validarNombreCompleto(
     control: AbstractControl
   ): ValidationErrors | null {
     const nombre = control.value;
     if (!nombre) {
+      return null;
+    }
+    const cedula = control.value;
+
+    if (cedula === '0000000000') {
       return null;
     }
 
@@ -230,7 +235,7 @@ export class RegistrationFormComponent implements OnInit {
     }
   }
 
-  private validarNotaGrado(control: AbstractControl): ValidationErrors | null {
+  public validarNotaGrado(control: AbstractControl): ValidationErrors | null {
     const nota = control.value;
     if (!nota) {
       return null;
@@ -243,7 +248,7 @@ export class RegistrationFormComponent implements OnInit {
     return null;
   }
 
-  private validarCorreoElectronico(
+  public validarCorreoElectronico(
     control: AbstractControl
   ): ValidationErrors | null {
     const correo = control.value;
@@ -260,7 +265,7 @@ export class RegistrationFormComponent implements OnInit {
     }
   }
 
-  private validarNumeroCelular(
+  public validarNumeroCelular(
     control: AbstractControl
   ): ValidationErrors | null {
     const telefono = control.value;
@@ -280,7 +285,7 @@ export class RegistrationFormComponent implements OnInit {
     return null;
   }
 
-  private validarCedulaEcuatoriana(
+  public validarCedulaEcuatoriana(
     control: AbstractControl
   ): ValidationErrors | null {
     const cedula = control.value;
@@ -326,7 +331,7 @@ export class RegistrationFormComponent implements OnInit {
     }
   }
 
-  private validarEdad(minEdad: number, maxEdad: number) {
+  public validarEdad(minEdad: number, maxEdad: number) {
     return (control: AbstractControl): ValidationErrors | null => {
       const fechaNacimiento = new Date(control.value);
       if (!control.value || isNaN(fechaNacimiento.getTime())) {
