@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
+import Swal from 'sweetalert2';
 import { LoginComponent } from './login.component';
 import { LoginService } from '../../../services/login/login.service';
 
@@ -52,4 +54,43 @@ describe('LoginComponent', () => {
     expect(component.loginForm.controls['password'].touched).toBeTrue();
   });
 
+  it('debería llamar a loginUser y redirigir al usuario si el formulario es válido y la respuesta es exitosa', () => {
+    const mockResponse = { token: 'fake-token' };
+    loginServiceSpy.loginUser.and.returnValue(of(mockResponse));
+    spyOn(console, 'log');
+    spyOn(routerSpy, 'navigate');
+    
+    component.loginForm.setValue({ username: 'testuser', password: 'testpass' });
+    component.onSubmit();
+    
+    expect(loginServiceSpy.loginUser).toHaveBeenCalledWith({ usernameOrEmail: 'testuser', password: 'testpass' });
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/verificar-registros']);
+    expect(console.log).toHaveBeenCalledWith('testuser', 'testpass', "Proyecto");
+  });
+
+  it('debería mostrar un error y resetear el formulario si loginUser falla', () => {
+    const errorResponse = new Error('Login failed');
+    loginServiceSpy.loginUser.and.returnValue(throwError(errorResponse));
+    
+    spyOn(Swal, 'fire').and.callFake(() => {
+      return Promise.resolve({
+        isConfirmed: false,
+        isDenied: false,
+        isDismissed: true
+      });
+    });
+  
+    component.loginForm.setValue({ username: 'testuser', password: 'testpass' });
+    component.onSubmit();
+  
+    const expectedSwalOptions = {
+      icon: 'error',
+      title: 'Datos incorrectos',
+      text: 'Los datos ingresados no son correctos'
+    };
+  
+    expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining(expectedSwalOptions));
+    expect(component.loginForm.value).toEqual({ username: '', password: '' });
+  });
+  
 });

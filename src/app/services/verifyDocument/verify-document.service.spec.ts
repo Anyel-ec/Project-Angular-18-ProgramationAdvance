@@ -28,6 +28,7 @@ describe('VerifyDocumentService', () => {
   afterEach(() => {
     httpMock.verify();
   });
+  
   it('should return expected data from getRelationsVerifyDocument', () => {
     const dummyData = [
       {
@@ -35,7 +36,6 @@ describe('VerifyDocumentService', () => {
         documentName: "Document1",
         status: "Verified"
       }
-      // Agrega más datos si es necesario
     ];
 
     service.getRelationsVerifyDocument().subscribe(data => {
@@ -46,6 +46,7 @@ describe('VerifyDocumentService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(dummyData);
   });
+
   it('should return updated data from updateVerifyDocument', () => {
     const id = '123';
     const updatedData = { status: 'Updated' };
