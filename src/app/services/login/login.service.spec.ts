@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { LoginService } from './login.service';
 
 describe('LoginService', () => {
@@ -8,8 +8,10 @@ describe('LoginService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [LoginService]
+      providers: [
+        LoginService,
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(LoginService);
@@ -37,20 +39,21 @@ describe('LoginService', () => {
   it('should handle errors', () => {
     const credentials = { username: 'testuser', password: 'testpass' };
     const errorMessage = 'Error occurred';
-  
-    service.loginUser(credentials).subscribe(
-      () => fail('expected an error, not user data'),
-      (error: string) => {
+
+    service.loginUser(credentials).subscribe({
+      next: () => fail('expected an error, not user data'),
+      error: (error: string) => {
         // Asegúrate de que el error recibido contenga el mensaje esperado
         expect(error).toContain('Error Code: 500');
         expect(error).toContain('Message: Http failure response for http://34.127.73.228:3001/api/users/login: 500 Server Error');
       }
+    }
     );
-  
+
     const req = httpMock.expectOne('http://34.127.73.228:3001/api/users/login');
     expect(req.request.method).toBe('POST');
     req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
   });
-  
-  
+
+
 });

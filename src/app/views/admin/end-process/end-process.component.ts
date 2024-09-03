@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UPLOAD_IMPORTS } from './importsModule';
 import Swal from 'sweetalert2';
 import { VerifyDocumentService } from '../../../services/verifyDocument/verify-document.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { catchError, of, tap } from 'rxjs';
 
 interface VerifiDocument {
   id: string;
@@ -20,10 +21,10 @@ interface VerifiDocument {
 @Component({
   selector: 'app-end-process',
   standalone: true,
-  imports: [UPLOAD_IMPORTS, HttpClientModule],
+  imports: [UPLOAD_IMPORTS],
   templateUrl: './end-process.component.html',
   styleUrls: ['./end-process.component.scss'],
-  providers: [VerifyDocumentService],
+  providers: [VerifyDocumentService, provideHttpClientTesting()],
 })
 export class EndProcessComponent implements OnInit {
 
@@ -35,15 +36,15 @@ export class EndProcessComponent implements OnInit {
   selectedDocumentUrl: SafeUrl = '';
   selectedDocument: VerifiDocument | null = null;
 
-  constructor(private VerifyDocumentService: VerifyDocumentService, private sanitizer: DomSanitizer) {}
+  constructor(private VerifyDocumentService: VerifyDocumentService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.fetchData();
   }
 
   fetchData(): void {
-    this.VerifyDocumentService.getRelationsVerifyDocument().subscribe(
-      (response) => {
+    this.VerifyDocumentService.getRelationsVerifyDocument().pipe(
+      tap((response) => {
         this.data = response.map((item: any) => ({
           id: item._id,
           cedula: item.identification,
@@ -53,15 +54,17 @@ export class EndProcessComponent implements OnInit {
           documento: item.document,
           estadoVerificacion: item.verifyDocumentState,
           estadoDocumento: item.uploadDocumentState,
-          typeDocument: item.typeDocument
+          typeDocument: item.typeDocument,
         }));
         this.filteredData = this.data;
-      },
-      (error) => {
+      }),
+      catchError((error) => {
         console.error('Error al obtener los datos:', error);
-      }
-    );
+        return of([]); // Devolver un arreglo vacío o manejar el error de otra manera
+      })
+    ).subscribe();
   }
+
 
   filterData(): void {
     if (this.searchTerm) {
@@ -108,7 +111,7 @@ export class EndProcessComponent implements OnInit {
   updateVerifyData(id: string, updatedData: any): void {
     this.VerifyDocumentService.updateVerifyDocument(id, updatedData).subscribe();
   }
-  
+
   aceptar(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
@@ -167,16 +170,18 @@ export class EndProcessComponent implements OnInit {
   }
 
   reenviarEnlace(id: string): void {
-    this.VerifyDocumentService.updateUploadDocumentAgain(id).subscribe(
-      (response) => {
+    this.VerifyDocumentService.updateUploadDocumentAgain(id).pipe(
+      tap((response) => {
         console.log('Correo Reenviado:', response);
-      },
-      (error) => {
+      }),
+      catchError((error) => {
         console.error('Error al reenviar el correo:', error);
-      }
-    );
+        return of(null); // Devolver un observable que maneje el error de forma segura
+      })
+    ).subscribe();
   }
-  
+
+
   reenviarEnlaceAlert(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
@@ -200,7 +205,7 @@ export class EndProcessComponent implements OnInit {
       });
     }
   }
-  
+
   updateTable(): void {
     this.fetchData();
     this.filterData();

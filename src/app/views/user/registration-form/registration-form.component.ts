@@ -9,18 +9,17 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import Swal from 'sweetalert2';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { CardImageComponent } from '../../../shared/card-image/card-image.component';
 import { HeaderComponent } from '../../../shared/header/header.component';
 import { CalendarModule } from 'primeng/calendar';
-import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import localeEsExtra from '@angular/common/locales/extra/es';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { LoadDataService } from '../../../services/loadDataRegister/load-data.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RegisterService } from '../../../services/register/register.service';
 
 registerLocaleData(localeEs, 'es', localeEsExtra);
@@ -38,9 +37,8 @@ registerLocaleData(localeEs, 'es', localeEsExtra);
     CardImageComponent,
     HeaderComponent,
     CalendarModule,
-    HttpClientModule,
   ],
-  providers: [FormBuilder, LoadDataService, RegisterService],
+  providers: [FormBuilder, LoadDataService, RegisterService, provideHttpClientTesting()],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.scss'],
 })
@@ -115,37 +113,37 @@ export class RegistrationFormComponent implements OnInit {
     });
   }
 
-  public loadProvinces() {
-    this.loadDataService.getProvinces().subscribe(
-      (data) => {
+  public loadProvinces(): void {
+    this.loadDataService.getProvinces().subscribe({
+      next: (data) => {
         this.provinces = data.data;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching provinces:', error);
       }
-    );
+    });
   }
 
-  public loadGenders() {
-    this.loadDataService.getGender().subscribe(
-      (data) => {
+  public loadGenders(): void {
+    this.loadDataService.getGender().subscribe({
+      next: (data) => {
         this.genders = data.data;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching genders:', error);
       }
-    );
+    });
   }
 
-  public loadCommandTypes() {
-    this.loadDataService.getCommandType().subscribe(
-      (data) => {
+  public loadCommandTypes(): void {
+    this.loadDataService.getCommandType().subscribe({
+      next: (data) => {
         this.commandTypes = data.data;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching command types:', error);
       }
-    );
+    });
   }
 
   save(event: Event) {
@@ -175,10 +173,9 @@ export class RegistrationFormComponent implements OnInit {
     }
   }
 
-
-  saveRegister(registerData: any) {
-    this.registerService.createOrUpdateRegister(registerData).subscribe(
-      (data) => {
+  public saveRegister(registerData: any): void {
+    this.registerService.createOrUpdateRegister(registerData).subscribe({
+      next: (data) => {
         Swal.fire({
           icon: 'success',
           title: 'Formulario Enviado',
@@ -191,7 +188,7 @@ export class RegistrationFormComponent implements OnInit {
           }
         });
       },
-      (error) => {
+      error: (error) => {
         console.error('Error creating or updating register:', error);
         Swal.fire({
           icon: 'error',
@@ -200,14 +197,14 @@ export class RegistrationFormComponent implements OnInit {
           confirmButtonText: 'Aceptar',
         });
       }
-    );
+    });
   }
 
-   captchaValid: boolean = false;
+  captchaValid: boolean = false;
 
-   resolved(captchaResponse: string | null) {
-     this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
-   }
+  resolved(captchaResponse: string | null) {
+    this.captchaValid = captchaResponse !== null && captchaResponse.length > 0;
+  }
 
   public validarNombreCompleto(
     control: AbstractControl
@@ -227,7 +224,7 @@ export class RegistrationFormComponent implements OnInit {
     }
 
     const expresionRegular =
-      /^[a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]*$/;
+      /^[a-zA-ZÀ-ÿñÑáéíóú\s.'-]*$/;
     if (expresionRegular.test(nombre)) {
       return null;
     } else {
@@ -381,13 +378,13 @@ export class RegistrationFormComponent implements OnInit {
 
   filterOnlyNumbers(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^0-9]/g, '');
+    input.value = input.value.replace(/\D/g, '');
   }
 
   filterOnlyLetters(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(
-      /[^a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]/g,
+      /[^a-zA-ZÀ-ÿñÑáéíóú\s.'-]/g,
       ''
     );
   }

@@ -3,7 +3,7 @@ import { of, throwError } from 'rxjs';
 import Swal, { SweetAlertResult } from 'sweetalert2';
 import { VerifyDataComponent } from './verify-data.component';
 import { VerifyDataService } from '../../../services/verifyData/verify-data.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { UPLOAD_IMPORTS } from './ImportsModule';
 
 describe('VerifyDataComponent', () => {
@@ -13,16 +13,18 @@ describe('VerifyDataComponent', () => {
 
   beforeEach(async () => {
     const spy = jasmine.createSpyObj('VerifyDataService', [
-      'getRelationsVerifyData', 
-      'updateVerifyData', 
+      'getRelationsVerifyData',
+      'updateVerifyData',
       'deleteVerifyData'
     ]);
 
     await TestBed.configureTestingModule({
-      imports: [VerifyDataComponent, ...UPLOAD_IMPORTS, HttpClientModule],
-      providers: [{ provide: VerifyDataService, useValue: spy }]
+      imports: [VerifyDataComponent, ...UPLOAD_IMPORTS],
+      providers: [{ provide: VerifyDataService, useValue: spy },
+      provideHttpClientTesting()
+      ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(VerifyDataComponent);
     component = fixture.componentInstance;
@@ -54,7 +56,7 @@ describe('VerifyDataComponent', () => {
   });
 
   it('should handle fetch data error', () => {
-    mockVerifyDataService.getRelationsVerifyData.and.returnValue(throwError('Error'));
+    mockVerifyDataService.getRelationsVerifyData.and.returnValue(throwError(() => new Error('Error')));
     component.ngOnInit();
     fixture.detectChanges();
 
@@ -88,11 +90,11 @@ describe('VerifyDataComponent', () => {
     };
     spyOn(Swal, 'fire').and.returnValue(Promise.resolve(mockSwalResult));
     mockVerifyDataService.updateVerifyData.and.returnValue(of({}));
-    
+
     const rowData = { id: '1', cedula: '123456', nombresCompletos: 'John Doe', genero: 'Male', provincia: 'SomeProvince', tipoCurso: 'CourseType', estado: 'Active' };
     spyOn(component, 'updateTable');
 
-    await component.aceptar(rowData);
+    component.aceptar(rowData);
     fixture.detectChanges();
 
     expect(mockVerifyDataService.updateVerifyData).toHaveBeenCalledWith('1', { updated_at: jasmine.any(Date) });
@@ -102,10 +104,10 @@ describe('VerifyDataComponent', () => {
   it('should handle update data error on accept', async () => {
     const mockSwalResult: SweetAlertResult = { isConfirmed: true, isDenied: false, isDismissed: false };
     spyOn(Swal, 'fire').and.returnValue(Promise.resolve(mockSwalResult));
-    mockVerifyDataService.updateVerifyData.and.returnValue(throwError('Error'));
+    mockVerifyDataService.updateVerifyData.and.returnValue(throwError(() => new Error('Error')));
 
     const rowData = { id: '1', cedula: '123456', nombresCompletos: 'John Doe', genero: 'Male', provincia: 'SomeProvince', tipoCurso: 'CourseType', estado: 'Active' };
-    await component.aceptar(rowData);
+    component.aceptar(rowData);
     fixture.detectChanges();
 
     expect(mockVerifyDataService.updateVerifyData).toHaveBeenCalledWith('1', { updated_at: jasmine.any(Date) });
@@ -115,11 +117,11 @@ describe('VerifyDataComponent', () => {
     const mockSwalResult: SweetAlertResult = { isConfirmed: true, isDenied: false, isDismissed: false };
     spyOn(Swal, 'fire').and.returnValue(Promise.resolve(mockSwalResult));
     mockVerifyDataService.deleteVerifyData.and.returnValue(of({}));
-    
+
     const rowData = { id: '1', cedula: '123456', nombresCompletos: 'John Doe', genero: 'Male', provincia: 'SomeProvince', tipoCurso: 'CourseType', estado: 'Active' };
     spyOn(component, 'updateTable');
 
-    await component.rechazar(rowData);
+    component.rechazar(rowData);
     fixture.detectChanges();
 
     expect(mockVerifyDataService.deleteVerifyData).toHaveBeenCalledWith('1');
@@ -129,10 +131,10 @@ describe('VerifyDataComponent', () => {
   it('should handle delete data error on reject', async () => {
     const mockSwalResult: SweetAlertResult = { isConfirmed: true, isDenied: false, isDismissed: false };
     spyOn(Swal, 'fire').and.returnValue(Promise.resolve(mockSwalResult));
-    mockVerifyDataService.deleteVerifyData.and.returnValue(throwError('Error'));
+    mockVerifyDataService.deleteVerifyData.and.returnValue(throwError(() => new Error('Error')));
 
     const rowData = { id: '1', cedula: '123456', nombresCompletos: 'John Doe', genero: 'Male', provincia: 'SomeProvince', tipoCurso: 'CourseType', estado: 'Active' };
-    await component.rechazar(rowData);
+    component.rechazar(rowData);
     fixture.detectChanges();
 
     expect(mockVerifyDataService.deleteVerifyData).toHaveBeenCalledWith('1');
@@ -141,7 +143,7 @@ describe('VerifyDataComponent', () => {
   it('should update table', () => {
     spyOn(component, 'fetchData').and.callThrough();
     spyOn(component, 'filterData').and.callThrough();
-    
+
     component.updateTable();
     fixture.detectChanges();
 

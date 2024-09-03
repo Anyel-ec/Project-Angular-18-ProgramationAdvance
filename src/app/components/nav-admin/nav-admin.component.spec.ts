@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MenubarModule } from 'primeng/menubar'; 
+import { MenubarModule } from 'primeng/menubar';
 import { NavAdminComponent } from './nav-admin.component';
-import { RouterTestingModule } from '@angular/router/testing'; 
+import { routes } from '../../app.routes';
+import { provideRouter } from '@angular/router';
 
 describe('NavAdminComponent', () => {
   let component: NavAdminComponent;
@@ -10,21 +11,25 @@ describe('NavAdminComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule, // Proporciona el módulo de enrutamiento
         MenubarModule, // Importa otros módulos necesarios
         NavAdminComponent
-      ]
-    })
-    .compileComponents();
+      ],
+      providers: [
+        provideRouter(routes), // Usa provideRouter con tus rutas
+      ],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(NavAdminComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    beforeEach(() => {
+      fixture = TestBed.createComponent(NavAdminComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 
   it('should toggle isNavActive when toggleNav is called', () => {
     // Initial state should be false

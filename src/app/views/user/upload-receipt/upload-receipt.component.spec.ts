@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing'; // Usa esta importación para pruebas de enrutamiento
 import { UploadReceiptComponent } from './upload-receipt.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UploadDocumentService } from '../../../services/uploadDocument/upload-document.service';
 import Swal from 'sweetalert2';
@@ -20,18 +20,22 @@ describe('UploadReceiptComponent', () => {
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [UploadReceiptComponent, RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
+      imports: [
+        RouterTestingModule, // Configuración estándar para pruebas de enrutamiento
+        ReactiveFormsModule
+      ],
+      declarations: [UploadReceiptComponent],
       providers: [
         FormBuilder,
         { provide: DomSanitizer, useValue: { bypassSecurityTrustResourceUrl: (url: string) => url } },
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '123' } } } },
         { provide: UploadDocumentService, useValue: uploadDocumentServiceSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: Router, useValue: routerSpy },
+        provideHttpClientTesting()
       ]
     }).compileComponents();
 
     uploadDocumentService = TestBed.inject(UploadDocumentService) as jasmine.SpyObj<UploadDocumentService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });
 
   beforeEach(() => {
@@ -43,7 +47,6 @@ describe('UploadReceiptComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 
   it('should handle file selection', () => {
     const mockFile = new File([''], 'test.png', { type: 'image/png' });
@@ -75,19 +78,16 @@ describe('UploadReceiptComponent', () => {
     component.id = '123';
     uploadDocumentService.updateVerifyDocument.and.returnValue(of({}));
     component.onSubmit();
-    
+
     const expectedAlert = {
       icon: 'warning',
       title: 'Error',
       text: 'Por favor, suba el documento antes de enviar.',
       confirmButtonText: 'Aceptar',
     };
-  
+
     expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining(expectedAlert));
     expect(uploadDocumentService.updateVerifyDocument).not.toHaveBeenCalled();
-    expect(component['router'].navigate).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
   });
-  
-  
-  
 });

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { RegisterService } from './register.service';
 
 describe('RegisterService', () => {
@@ -9,8 +9,10 @@ describe('RegisterService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [RegisterService]
+      providers: [
+        RegisterService,
+        provideHttpClientTesting()
+      ]
     });
     service = TestBed.inject(RegisterService);
     httpMock = TestBed.inject(HttpTestingController);

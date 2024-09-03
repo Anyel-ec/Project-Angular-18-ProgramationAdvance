@@ -21,13 +21,13 @@ export class LoginService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Unknown error!';
+    let errorMessage:  string;
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     console.error(errorMessage);
-    return throwError(errorMessage);
+    return throwError(() => Error(errorMessage));
   }
 }

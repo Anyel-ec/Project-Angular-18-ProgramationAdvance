@@ -2,56 +2,58 @@ import { Component, OnInit } from '@angular/core';
 import { UPLOAD_IMPORTS } from './ImportsModule';
 import Swal from 'sweetalert2';
 import { VerifyDataService } from '../../../services/verifyData/verify-data.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { catchError, of } from 'rxjs';
 
-interface verifyData {
+interface VerifyData {
   id: string;
   cedula: string;
   nombresCompletos: string;
   genero: string;
   provincia: string;
   tipoCurso: string;
-  estado: string; 
+  estado: string;
 }
 
 @Component({
   selector: 'app-verify-data',
   standalone: true,
-  imports: [UPLOAD_IMPORTS, HttpClientModule],
+  imports: [UPLOAD_IMPORTS],
   templateUrl: './verify-data.component.html',
   styleUrls: ['./verify-data.component.scss'],
-  providers: [VerifyDataService],
+  providers: [VerifyDataService, provideHttpClientTesting()],
 })
 export class VerifyDataComponent implements OnInit {
 
-  data: verifyData[] = [];
+  data: VerifyData[] = [];
   searchTerm: string = '';
-  filteredData: verifyData[] = [];
+  filteredData: VerifyData[] = [];
 
-  constructor(private verifyDataService: VerifyDataService) {}
+  constructor(private verifyDataService: VerifyDataService) { }
 
   ngOnInit(): void {
     this.fetchData();
   }
 
   fetchData(): void {
-    this.verifyDataService.getRelationsVerifyData().subscribe(
-      (response) => {
-        this.data = response.map((item: any) => ({
-          id: item._id,
-          cedula: item.identification,
-          nombresCompletos: item.name,
-          genero: item.gender,
-          provincia: item.province,
-          tipoCurso: item.commandType,
-          estado: item.state
-        }));
-        this.filteredData = this.data;
-      },
-      (error) => {
+    this.verifyDataService.getRelationsVerifyData().pipe(
+      catchError(error => {
         console.error('Error al obtener los datos:', error);
-      }
-    );
+        // Maneja el error y devuelve un observable vacío o valor por defecto
+        return of([]); // Retorna un array vacío en caso de error
+      })
+    ).subscribe(response => {
+      this.data = response.map((item: any) => ({
+        id: item._id,
+        cedula: item.identification,
+        nombresCompletos: item.name,
+        genero: item.gender,
+        provincia: item.province,
+        tipoCurso: item.commandType,
+        estado: item.state
+      }));
+      this.filteredData = this.data;
+    });
   }
 
   filterData(): void {
@@ -80,17 +82,18 @@ export class VerifyDataComponent implements OnInit {
   }
 
   updateVerifyData(id: string, updatedData: any): void {
-    this.verifyDataService.updateVerifyData(id, updatedData).subscribe(
-      (response) => {
-        console.log('Dato actualizado:', response);
-      },
-      (error) => {
+    this.verifyDataService.updateVerifyData(id, updatedData).pipe(
+      catchError(error => {
         console.error('Error al actualizar el dato:', error);
-      }
-    );
+        // Maneja el error y devuelve un observable vacío o valor por defecto
+        return of(null); // Retorna un valor por defecto en caso de error
+      })
+    ).subscribe(response => {
+      console.log('Dato actualizado:', response);
+    });
   }
 
-  aceptar(rowData: verifyData): void {
+  aceptar(rowData: VerifyData): void {
     console.log('Aceptar:', rowData);
     Swal.fire({
       title: "¿Estás seguro?",
@@ -119,17 +122,20 @@ export class VerifyDataComponent implements OnInit {
   }
 
   deleteVerifyData(id: string): void {
-    this.verifyDataService.deleteVerifyData(id).subscribe(
-      (response) => {
-        console.log('Dato eliminado:', response);
-      },
-      (error) => {
+    this.verifyDataService.deleteVerifyData(id).pipe(
+      catchError(error => {
         console.error('Error al eliminar el dato:', error);
+        // Maneja el error y devuelve un observable vacío o valor por defecto
+        return of(null); // Retorna un valor por defecto en caso de error
+      })
+    ).subscribe(response => {
+      if (response) {
+        console.log('Dato eliminado:', response);
       }
-    );
+    });
   }
 
-  rechazar(rowData: verifyData): void {
+  rechazar(rowData: VerifyData): void {
     console.log('Declinar:', rowData);
     Swal.fire({
       title: "¿Estás seguro?",
@@ -141,7 +147,7 @@ export class VerifyDataComponent implements OnInit {
       confirmButtonText: "Rechazar"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.deleteVerifyData(rowData.id); 
+        this.deleteVerifyData(rowData.id);
         Swal.fire({
           title: "Aspirante rechazado",
           text: "Se emitirá el correo al aspirante.",

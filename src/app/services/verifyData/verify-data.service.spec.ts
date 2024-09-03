@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ApiConfigService } from '../api-Config-Service';
 import { VerifyDataService } from './verify-data.service';
 
@@ -13,16 +13,15 @@ describe('VerifyDataService', () => {
     spy.getBaseUrl.and.returnValue('http://34.127.73.228:3001/'); // Asegúrate de que es correcto
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
         VerifyDataService,
-        { provide: ApiConfigService, useValue: spy }
+        { provide: ApiConfigService, useValue: spy },
+        provideHttpClientTesting()
       ]
     });
 
     service = TestBed.inject(VerifyDataService);
     httpMock = TestBed.inject(HttpTestingController);
-    apiConfigServiceSpy = TestBed.inject(ApiConfigService) as jasmine.SpyObj<ApiConfigService>;
   });
 
   afterEach(() => {

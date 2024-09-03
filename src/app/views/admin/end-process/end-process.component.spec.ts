@@ -6,10 +6,10 @@ import {
 } from '@angular/core/testing';
 import { EndProcessComponent } from './end-process.component';
 import { VerifyDocumentService } from '../../../services/verifyDocument/verify-document.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
-import Swal, { SweetAlertResult } from 'sweetalert2';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import Swal from 'sweetalert2';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { UPLOAD_IMPORTS } from './importsModule';
 
 describe('EndProcessComponent', () => {
@@ -26,32 +26,31 @@ describe('EndProcessComponent', () => {
       'deleteVerifyDocument',
       'updateUploadDocumentAgain',
     ]);
-  
+
     verifyDocumentSpy.updateVerifyDocument.and.returnValue(of({})); // Simula la respuesta del servicio
     verifyDocumentSpy.deleteVerifyDocument.and.returnValue(of({}));
     verifyDocumentSpy.updateUploadDocumentAgain.and.returnValue(of({}));
-  
+
     const sanitizerSpyObj = jasmine.createSpyObj('DomSanitizer', [
       'bypassSecurityTrustResourceUrl',
     ]);
-  
+
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         ...UPLOAD_IMPORTS,
         EndProcessComponent,
       ],
       providers: [
+        provideHttpClientTesting(), // Reemplazo de HttpClientTestingModule
         { provide: VerifyDocumentService, useValue: verifyDocumentSpy },
         { provide: DomSanitizer, useValue: sanitizerSpyObj },
       ],
     }).compileComponents();
-  
+
     fixture = TestBed.createComponent(EndProcessComponent);
     component = fixture.componentInstance;
-    mockVerifyDataService = TestBed.inject(VerifyDocumentService) as jasmine.SpyObj<VerifyDocumentService>;
+    sanitizerSpy = TestBed.inject(DomSanitizer) as jasmine.SpyObj<DomSanitizer>;
   });
-  
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -167,15 +166,11 @@ describe('EndProcessComponent', () => {
   it('should update table', () => {
     spyOn(component, 'fetchData').and.callThrough();
     spyOn(component, 'filterData').and.callThrough();
-    
+
     component.updateTable();
     fixture.detectChanges();
 
     expect(component.fetchData).toHaveBeenCalled();
     expect(component.filterData).toHaveBeenCalled();
   });
-
-
 });
-  
-

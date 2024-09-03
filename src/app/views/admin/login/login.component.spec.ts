@@ -15,7 +15,7 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     const loginService = jasmine.createSpyObj('LoginService', ['loginUser']);
     const router = jasmine.createSpyObj('Router', ['navigate']);
-    
+
     await TestBed.configureTestingModule({
       imports: [LoginComponent],  // Importa el componente standalone aquí
       providers: [
@@ -59,10 +59,10 @@ describe('LoginComponent', () => {
     loginServiceSpy.loginUser.and.returnValue(of(mockResponse));
     spyOn(console, 'log');
     spyOn(routerSpy, 'navigate');
-    
+
     component.loginForm.setValue({ username: 'testuser', password: 'testpass' });
     component.onSubmit();
-    
+
     expect(loginServiceSpy.loginUser).toHaveBeenCalledWith({ usernameOrEmail: 'testuser', password: 'testpass' });
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/verificar-registros']);
     expect(console.log).toHaveBeenCalledWith('testuser', 'testpass', "Proyecto");
@@ -70,8 +70,8 @@ describe('LoginComponent', () => {
 
   it('debería mostrar un error y resetear el formulario si loginUser falla', () => {
     const errorResponse = new Error('Login failed');
-    loginServiceSpy.loginUser.and.returnValue(throwError(errorResponse));
-    
+    loginServiceSpy.loginUser.and.returnValue(throwError(() => errorResponse));
+
     spyOn(Swal, 'fire').and.callFake(() => {
       return Promise.resolve({
         isConfirmed: false,
@@ -79,18 +79,18 @@ describe('LoginComponent', () => {
         isDismissed: true
       });
     });
-  
+
     component.loginForm.setValue({ username: 'testuser', password: 'testpass' });
     component.onSubmit();
-  
+
     const expectedSwalOptions = {
       icon: 'error',
       title: 'Datos incorrectos',
       text: 'Los datos ingresados no son correctos'
     };
-  
+
     expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining(expectedSwalOptions));
     expect(component.loginForm.value).toEqual({ username: '', password: '' });
   });
-  
+
 });
