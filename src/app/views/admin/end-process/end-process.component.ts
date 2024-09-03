@@ -102,11 +102,7 @@ export class EndProcessComponent implements OnInit {
     console.log(rowData.documento);
     console.log(rowData.typeDocument);
     // Verifica y sanitiza la URL del documento
-    if (rowData.typeDocument.startsWith('image/')) {
-      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${rowData.typeDocument};base64,${rowData.documento}`);
-    } else {
-      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${rowData.typeDocument};base64,${rowData.documento}`);
-    }
+    this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${rowData.typeDocument};base64,${rowData.documento}`);
   }
 
   updateVerifyData(id: string, updatedData: any): void {

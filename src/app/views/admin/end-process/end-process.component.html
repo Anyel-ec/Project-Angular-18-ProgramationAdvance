@@ -29,23 +29,23 @@
 
     <ng-template pTemplate="header">
       <tr style="text-align: center">
-        <th pSortableColumn="cedula">
+        <th pSortableColumn="cedula" scope="col">
           Cédula <p-sortIcon field="cedula"></p-sortIcon>
         </th>
-        <th pSortableColumn="nombresCompletos">
+        <th pSortableColumn="nombresCompletos" scope="col">
           Nombres Completos <p-sortIcon field="nombresCompletos"></p-sortIcon>
         </th>
-        <th pSortableColumn="genero">
+        <th pSortableColumn="genero" scope="col">
           Tipo de Curso <p-sortIcon field="genero"></p-sortIcon>
         </th>
-        <th pSortableColumn="tipoCurso">
+        <th pSortableColumn="tipoCurso" scope="col">
           Nota de Grado <p-sortIcon field="tipoCurso"></p-sortIcon>
         </th>
         <th>Documento</th>
-        <th pSortableColumn="estado">
+        <th pSortableColumn="estado" scope="col">
           Estado <p-sortIcon field="estado"></p-sortIcon>
         </th>
-        <th>Acciones</th>
+        <th scope="col">Acciones</th>
       </tr>
     </ng-template>
 
@@ -171,6 +171,7 @@
           [src]="selectedDocumentUrl"
           width="100%"
           height="600px"
+          title="Url del documento"
         ></iframe>
       </ng-template>
     </ng-container>
