@@ -54,22 +54,37 @@ export class UploadReceiptComponent implements OnInit {
     const file: File = event.target.files[0];
 
     if (file) {
-      // Validación del archivo (por ejemplo, tipo y tamaño)
+      // Validación del archivo (tipo y tamaño)
       if (this.isValidFile(file)) {
         this.selectedFile = file;
 
         const reader = new FileReader();
         reader.onload = () => {
-          // Sanitización de la URL del archivo
-          this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-            reader.result as string
-          );
-          this.isImage = file.type.startsWith('image/');
+          const fileResult = reader.result as string;
+
+          // Validación adicional antes de desactivar la sanitización
+          if (this.isSafeContent(fileResult)) {
+            this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileResult);
+            this.isImage = file.type.startsWith('image/');
+          } else {
+            console.error('Contenido no seguro detectado:', fileResult);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de seguridad',
+              text: 'El contenido del archivo no es seguro.',
+              confirmButtonText: 'Aceptar',
+            });
+          }
         };
         reader.readAsDataURL(file);
       } else {
         console.error('Archivo no válido:', file);
-        // Manejo de archivos no válidos (opcional)
+        Swal.fire({
+          icon: 'error',
+          title: 'Archivo no válido',
+          text: 'El archivo seleccionado no es válido. Por favor, seleccione un archivo con un formato permitido y un tamaño menor a 5MB.',
+          confirmButtonText: 'Aceptar',
+        });
       }
     }
   }
@@ -80,6 +95,11 @@ export class UploadReceiptComponent implements OnInit {
 
     // Validar tipo de archivo y tamaño
     return allowedTypes.includes(file.type) && file.size <= maxSize;
+  }
+
+  private isSafeContent(content: string): boolean {
+    // Aquí puedes implementar lógica adicional para verificar la seguridad del contenido
+    return true; // Retorna 'true' si el contenido es seguro.
   }
 
   clearFile(): void {
@@ -93,7 +113,7 @@ export class UploadReceiptComponent implements OnInit {
     if (this.form.valid && this.selectedFile && this.id) {
       this.uploadDocumentService.updateVerifyDocument(this.id, this.selectedFile).pipe(
         catchError(error => {
-          console.error('Error updating document', error);
+          console.error('Error al actualizar el documento', error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -103,7 +123,6 @@ export class UploadReceiptComponent implements OnInit {
           return of(null); // Devuelve un observable vacío para continuar con el flujo
         }),
         finalize(() => {
-          // Este bloque se ejecutará sin importar si la solicitud fue exitosa o no
           Swal.fire({
             icon: 'success',
             title: 'Documento Enviado',

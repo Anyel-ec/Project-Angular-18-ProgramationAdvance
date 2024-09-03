@@ -65,7 +65,6 @@ export class EndProcessComponent implements OnInit {
     ).subscribe();
   }
 
-
   filterData(): void {
     if (this.searchTerm) {
       this.filteredData = this.data.filter(
@@ -120,14 +119,12 @@ export class EndProcessComponent implements OnInit {
 
   // Método para validar MIME type
   private isValidMimeType(mimeType: string): boolean {
-    // Agrega validación según los tipos MIME que esperas
-    const validMimeTypes = ['application/pdf', 'image/png', 'image/jpeg']; // Ejemplo
+    const validMimeTypes = ['application/pdf', 'image/png', 'image/jpeg'];
     return validMimeTypes.includes(mimeType);
   }
 
   // Método para validar datos Base64
   private isValidBase64(base64Data: string): boolean {
-    // Verifica que base64Data tenga una estructura esperada (esto puede ser ajustado según tus necesidades)
     const base64Pattern = /^[A-Za-z0-9+/=]+$/;
     return base64Pattern.test(base64Data);
   }
@@ -139,8 +136,8 @@ export class EndProcessComponent implements OnInit {
   aceptar(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
-        title: 'Estas seguro?',
-        text: 'Se aceptará la inscripcion del aspirante.',
+        title: '¿Estás seguro?',
+        text: 'Se aceptará la inscripción del aspirante.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -153,8 +150,8 @@ export class EndProcessComponent implements OnInit {
           };
           this.updateVerifyData(rowData.id, updatedData);
           Swal.fire({
-            title: 'Inscripcion aceptada',
-            text: 'Se emitira el correo de confirmación al aspirante.',
+            title: 'Inscripción aceptada',
+            text: 'Se emitirá el correo de confirmación al aspirante.',
             icon: 'success',
           }).then(() => {
             this.updateTable();
@@ -171,8 +168,8 @@ export class EndProcessComponent implements OnInit {
   rechazar(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
-        title: 'Estas seguro?',
-        text: 'Se rechazara la inscripcion del aspirante.',
+        title: '¿Estás seguro?',
+        text: 'Se rechazará la inscripción del aspirante.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -182,8 +179,8 @@ export class EndProcessComponent implements OnInit {
         if (result.isConfirmed) {
           this.deleteVerifyDocument(rowData.id);
           Swal.fire({
-            title: 'Inscripcion rechazada',
-            text: 'Se emitira el correo al aspirante.',
+            title: 'Inscripción rechazada',
+            text: 'Se emitirá el correo al aspirante.',
             icon: 'success',
           }).then(() => {
             this.updateTable();
@@ -196,7 +193,7 @@ export class EndProcessComponent implements OnInit {
   reenviarEnlace(id: string): void {
     this.VerifyDocumentService.updateUploadDocumentAgain(id).pipe(
       tap((response) => {
-        console.log('Correo Reenviado:', response);
+        console.log('Correo reenviado:', response);
       }),
       catchError((error) => {
         console.error('Error al reenviar el correo:', error);
@@ -204,7 +201,6 @@ export class EndProcessComponent implements OnInit {
       })
     ).subscribe();
   }
-
 
   reenviarEnlaceAlert(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {

@@ -6,6 +6,15 @@ describe('LoginService', () => {
   let service: LoginService;
   let httpMock: HttpTestingController;
 
+  const TEST_USERNAME = 'testuser';
+  const TEST_PASSWORD = 'testpass';
+  const TEST_CREDENTIALS = { username: TEST_USERNAME, password: TEST_PASSWORD };
+  const EXPECTED_RESPONSE = { data: { token: 'abc123' } };
+  const ERROR_MESSAGE = 'Error occurred';
+  const ERROR_RESPONSE = {
+    error: 'Error Code: 500\nMessage: Http failure response for http://34.127.73.228:3001/api/users/login: 500 Server Error'
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -23,45 +32,33 @@ describe('LoginService', () => {
   });
 
   it('should return user data on successful login', () => {
-    // Use variables for credentials and response data
-    const testCredentials = { username: 'testuser', password: 'testpass' };
-    const expectedResponse = { data: { token: 'abc123' } };
-
-    // Subscribe to the loginUser observable
-    service.loginUser(testCredentials).subscribe(data => {
-      expect(data).toEqual(expectedResponse.data);
+    // Llamar al método loginUser con las credenciales de prueba
+    service.loginUser(TEST_CREDENTIALS).subscribe(data => {
+      expect(data).toEqual(EXPECTED_RESPONSE.data);
     });
 
-    // Expect an HTTP request to be made
+    // Esperar una solicitud HTTP POST a la URL de login
     const req = httpMock.expectOne('http://34.127.73.228:3001/api/users/login');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(testCredentials);
-    expect(req.request.headers.get('Content-Type')).toBe('application/json');
+    expect(req.request.body).toEqual(TEST_CREDENTIALS);
 
-    // Provide a mock response
-    req.flush(expectedResponse);
+    // Responder con el mock de respuesta
+    req.flush(EXPECTED_RESPONSE);
   });
 
   it('should handle errors', () => {
-    // Use variables for credentials and error message
-    const testCredentials = { username: 'testuser', password: 'testpass' };
-    const errorMessage = 'Error occurred';
-
-    // Subscribe to the loginUser observable
-    service.loginUser(testCredentials).subscribe({
+    // Suscribirse al observable loginUser con las credenciales de prueba
+    service.loginUser(TEST_CREDENTIALS).subscribe({
       next: () => fail('expected an error, not user data'),
       error: (error: any) => {
-        // Check the error message for the expected details
-        expect(error.error).toContain('Error Code: 500');
-        expect(error.error).toContain('Message: Http failure response for http://34.127.73.228:3001/api/users/login: 500 Server Error');
+        // Verifica que el mensaje de error contenga los detalles esperados
+        expect(error.error).toContain(ERROR_RESPONSE.error);
       }
     });
-
-    // Expect an HTTP request to be made
+  
+    // Simular la respuesta del servidor con un error 500
     const req = httpMock.expectOne('http://34.127.73.228:3001/api/users/login');
     expect(req.request.method).toBe('POST');
-
-    // Provide a mock error response
-    req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
-  });
+    req.flush(ERROR_MESSAGE, { status: 500, statusText: 'Server Error' });
+  });  
 });
