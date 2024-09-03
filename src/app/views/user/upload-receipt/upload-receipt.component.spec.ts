@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing'; // Usa esta importación para pruebas de enrutamiento
 import { UploadReceiptComponent } from './upload-receipt.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -21,7 +20,6 @@ describe('UploadReceiptComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule, // Configuración estándar para pruebas de enrutamiento
         ReactiveFormsModule
       ],
       declarations: [UploadReceiptComponent],

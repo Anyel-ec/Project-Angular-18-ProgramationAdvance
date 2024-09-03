@@ -55,17 +55,32 @@ describe('LoginComponent', () => {
   });
 
   it('debería llamar a loginUser y redirigir al usuario si el formulario es válido y la respuesta es exitosa', () => {
+    // Define variables para las credenciales y la respuesta simulada
+    const username = 'testuser';
+    const password = 'testpass';
     const mockResponse = { token: 'fake-token' };
+
+    // Configura el espía para devolver la respuesta simulada
     loginServiceSpy.loginUser.and.returnValue(of(mockResponse));
+
+    // Espía para la consola y la navegación
     spyOn(console, 'log');
     spyOn(routerSpy, 'navigate');
 
-    component.loginForm.setValue({ username: 'testuser', password: 'testpass' });
+    // Establece los valores en el formulario
+    component.loginForm.setValue({ username, password });
+
+    // Llama al método onSubmit
     component.onSubmit();
 
-    expect(loginServiceSpy.loginUser).toHaveBeenCalledWith({ usernameOrEmail: 'testuser', password: 'testpass' });
+    // Verifica que el método loginUser ha sido llamado con los parámetros correctos
+    expect(loginServiceSpy.loginUser).toHaveBeenCalledWith({ usernameOrEmail: username, password });
+
+    // Verifica que se ha llamado a navigate con la ruta correcta
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/verificar-registros']);
-    expect(console.log).toHaveBeenCalledWith('testuser', 'testpass', "Proyecto");
+
+    // Verifica que console.log ha sido llamado con los valores correctos
+    expect(console.log).toHaveBeenCalledWith(username, password, "Proyecto");
   });
 
   it('debería mostrar un error y resetear el formulario si loginUser falla', () => {

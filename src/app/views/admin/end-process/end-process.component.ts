@@ -33,7 +33,7 @@ export class EndProcessComponent implements OnInit {
   filteredData: VerifiDocument[] = [];
 
   Comprobante: boolean = false;
-  selectedDocumentUrl: SafeUrl = '';
+  selectedDocumentUrl: SafeUrl | null = null;
   selectedDocument: VerifiDocument | null = null;
 
   constructor(private VerifyDocumentService: VerifyDocumentService, private sanitizer: DomSanitizer) { }
@@ -102,10 +102,34 @@ export class EndProcessComponent implements OnInit {
   verComprobante(rowData: VerifiDocument): void {
     this.Comprobante = true;
     this.selectedDocument = rowData;
+
+    const mimeType = rowData.typeDocument;
+    const base64Data = rowData.documento;
+
+    if (this.isValidMimeType(mimeType) && this.isValidBase64(base64Data)) {
+      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${mimeType};base64,${base64Data}`);
+    } else {
+      // Usar una URL segura por defecto o manejar el caso de error de otra manera
+      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
+      console.error('Datos no válidos para crear la URL del documento.');
+    }
+
     console.log(rowData.documento);
     console.log(rowData.typeDocument);
-    // Verifica y sanitiza la URL del documento
-    this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${rowData.typeDocument};base64,${rowData.documento}`);
+  }
+
+  // Método para validar MIME type
+  private isValidMimeType(mimeType: string): boolean {
+    // Agrega validación según los tipos MIME que esperas
+    const validMimeTypes = ['application/pdf', 'image/png', 'image/jpeg']; // Ejemplo
+    return validMimeTypes.includes(mimeType);
+  }
+
+  // Método para validar datos Base64
+  private isValidBase64(base64Data: string): boolean {
+    // Verifica que base64Data tenga una estructura esperada (esto puede ser ajustado según tus necesidades)
+    const base64Pattern = /^[A-Za-z0-9+/=]+$/;
+    return base64Pattern.test(base64Data);
   }
 
   updateVerifyData(id: string, updatedData: any): void {

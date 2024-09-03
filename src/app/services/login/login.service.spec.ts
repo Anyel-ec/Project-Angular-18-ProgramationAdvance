@@ -21,39 +21,47 @@ describe('LoginService', () => {
   afterEach(() => {
     httpMock.verify();
   });
-  it('should return user data on successful login', () => {
-    const credentials = { username: 'testuser', password: 'testpass' };
-    const dummyResponse = { data: { token: 'abc123' } };
 
-    service.loginUser(credentials).subscribe(data => {
-      expect(data).toEqual(dummyResponse.data);
+  it('should return user data on successful login', () => {
+    // Use variables for credentials and response data
+    const testCredentials = { username: 'testuser', password: 'testpass' };
+    const expectedResponse = { data: { token: 'abc123' } };
+
+    // Subscribe to the loginUser observable
+    service.loginUser(testCredentials).subscribe(data => {
+      expect(data).toEqual(expectedResponse.data);
     });
 
+    // Expect an HTTP request to be made
     const req = httpMock.expectOne('http://34.127.73.228:3001/api/users/login');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(credentials);
+    expect(req.request.body).toEqual(testCredentials);
     expect(req.request.headers.get('Content-Type')).toBe('application/json');
-    req.flush(dummyResponse);
+
+    // Provide a mock response
+    req.flush(expectedResponse);
   });
 
   it('should handle errors', () => {
-    const credentials = { username: 'testuser', password: 'testpass' };
+    // Use variables for credentials and error message
+    const testCredentials = { username: 'testuser', password: 'testpass' };
     const errorMessage = 'Error occurred';
 
-    service.loginUser(credentials).subscribe({
+    // Subscribe to the loginUser observable
+    service.loginUser(testCredentials).subscribe({
       next: () => fail('expected an error, not user data'),
-      error: (error: string) => {
-        // Asegúrate de que el error recibido contenga el mensaje esperado
-        expect(error).toContain('Error Code: 500');
-        expect(error).toContain('Message: Http failure response for http://34.127.73.228:3001/api/users/login: 500 Server Error');
+      error: (error: any) => {
+        // Check the error message for the expected details
+        expect(error.error).toContain('Error Code: 500');
+        expect(error.error).toContain('Message: Http failure response for http://34.127.73.228:3001/api/users/login: 500 Server Error');
       }
-    }
-    );
+    });
 
+    // Expect an HTTP request to be made
     const req = httpMock.expectOne('http://34.127.73.228:3001/api/users/login');
     expect(req.request.method).toBe('POST');
+
+    // Provide a mock error response
     req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
   });
-
-
 });

@@ -52,17 +52,34 @@ export class UploadReceiptComponent implements OnInit {
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
-    this.selectedFile = file;
+
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          reader.result as string
-        );
-        this.isImage = file.type.startsWith('image/');
-      };
-      reader.readAsDataURL(file);
+      // Validación del archivo (por ejemplo, tipo y tamaño)
+      if (this.isValidFile(file)) {
+        this.selectedFile = file;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          // Sanitización de la URL del archivo
+          this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            reader.result as string
+          );
+          this.isImage = file.type.startsWith('image/');
+        };
+        reader.readAsDataURL(file);
+      } else {
+        console.error('Archivo no válido:', file);
+        // Manejo de archivos no válidos (opcional)
+      }
     }
+  }
+
+  private isValidFile(file: File): boolean {
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf']; // Tipos permitidos
+    const maxSize = 5 * 1024 * 1024; // 5 MB en bytes
+
+    // Validar tipo de archivo y tamaño
+    return allowedTypes.includes(file.type) && file.size <= maxSize;
   }
 
   clearFile(): void {
