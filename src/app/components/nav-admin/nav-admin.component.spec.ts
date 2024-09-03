@@ -12,24 +12,25 @@ describe('NavAdminComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MenubarModule, // Importa otros módulos necesarios
-        NavAdminComponent
       ],
       providers: [
         provideRouter(routes), // Usa provideRouter con tus rutas
       ],
+      declarations: [
+        NavAdminComponent // Declara el componente aquí
+      ],
     }).compileComponents();
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(NavAdminComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    });
-
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
   });
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(NavAdminComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
   it('should toggle isNavActive when toggleNav is called', () => {
     // Initial state should be false

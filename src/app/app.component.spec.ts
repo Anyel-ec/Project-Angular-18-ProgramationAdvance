@@ -1,21 +1,24 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, NavigationEnd } from '@angular/router';
 import { AppComponent } from './app.component';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 describe('AppComponent', () => {
   let component: AppComponent;
-  let fixture: any;
-  let router: any;
+  let fixture: ComponentFixture<AppComponent>;
+  let router: Router;
+  let eventsSubject: Subject<NavigationEnd>;
 
   beforeEach(async () => {
+    eventsSubject = new Subject<NavigationEnd>();
+
     // Crear un stub para el router
     const routerStub = {
-      events: of(new NavigationEnd(1, '/login', '/login'))
+      events: eventsSubject.asObservable()
     };
 
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      declarations: [AppComponent], // Usa 'declarations' para registrar el componente
       providers: [
         { provide: Router, useValue: routerStub }
       ]
@@ -35,21 +38,21 @@ describe('AppComponent', () => {
   });
 
   it('should hide header and footer on login route', () => {
-    router.events = of(new NavigationEnd(1, '/login', '/login'));
+    eventsSubject.next(new NavigationEnd(1, '/login', '/login'));
     fixture.detectChanges();
     expect(component.showHeader).toBeFalse();
     expect(component.showFooter).toBeFalse();
   });
 
   it('should hide header and footer on error-404 route', () => {
-    router.events = of(new NavigationEnd(1, '/error-404', '/error-404'));
+    eventsSubject.next(new NavigationEnd(1, '/error-404', '/error-404'));
     fixture.detectChanges();
     expect(component.showHeader).toBeFalse();
     expect(component.showFooter).toBeFalse();
   });
 
   it('should handle upload-receipt route correctly', () => {
-    router.events = of(new NavigationEnd(1, '/subir-recibo/123', '/subir-recibo/123'));
+    eventsSubject.next(new NavigationEnd(1, '/subir-recibo/123', '/subir-recibo/123'));
     fixture.detectChanges();
     expect(component.showHeader).toBeFalse();
     expect(component.showFooter).toBeFalse();
