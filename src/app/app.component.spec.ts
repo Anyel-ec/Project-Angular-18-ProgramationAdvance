@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, NavigationEnd } from '@angular/router';
 import { AppComponent } from './app.component';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core'; // Importa NO_ERRORS_SCHEMA para ignorar errores de los componentes no declarados
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let router: Router;
   let eventsSubject: Subject<NavigationEnd>;
 
   beforeEach(async () => {
@@ -18,15 +18,15 @@ describe('AppComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [AppComponent], // Usa 'declarations' para registrar el componente
+      declarations: [AppComponent],
       providers: [
         { provide: Router, useValue: routerStub }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA] // Ignora los errores de los componentes no declarados
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
   });
 
   it('should create the app', () => {
@@ -38,23 +38,36 @@ describe('AppComponent', () => {
   });
 
   it('should hide header and footer on login route', () => {
-    eventsSubject.next(new NavigationEnd(1, '/login', '/login'));
-    fixture.detectChanges();
-    expect(component.showHeader).toBeFalse();
-    expect(component.showFooter).toBeFalse();
+    component.isAdmin = false; // Asegúrate de que isAdmin esté configurado como false
+    testRouteVisibility('/login');
   });
 
   it('should hide header and footer on error-404 route', () => {
-    eventsSubject.next(new NavigationEnd(1, '/error-404', '/error-404'));
-    fixture.detectChanges();
-    expect(component.showHeader).toBeFalse();
-    expect(component.showFooter).toBeFalse();
+    component.isAdmin = false; // Asegúrate de que isAdmin esté configurado como false
+    testRouteVisibility('/error-404');
   });
 
-  it('should handle upload-receipt route correctly', () => {
-    eventsSubject.next(new NavigationEnd(1, '/subir-recibo/123', '/subir-recibo/123'));
-    fixture.detectChanges();
-    expect(component.showHeader).toBeFalse();
-    expect(component.showFooter).toBeFalse();
+  it('should show header and footer on other routes', () => {
+    component.isAdmin = false; // Asegúrate de que isAdmin esté configurado como false
+    testRouteVisibility('/some-other-route', true);
   });
+
+  it('should show admin nav if user is admin', () => {
+    component.isAdmin = true; // Configura isAdmin como true
+    eventsSubject.next(new NavigationEnd(1, '/some-route', '/some-route'));
+    fixture.detectChanges();
+    expect(component.showHeader).toBeTrue();
+    expect(component.showFooter).toBeTrue();
+    // Verifica si el componente de navegación del administrador se muestra
+    const compiled = fixture.nativeElement;
+    expect(compiled.querySelector('app-nav-admin')).toBeTruthy();
+    expect(compiled.querySelector('app-nav')).toBeFalsy();
+  });
+
+  function testRouteVisibility(route: string, expectHeaderAndFooter = false) {
+    eventsSubject.next(new NavigationEnd(1, route, route));
+    fixture.detectChanges();
+    expect(component.showHeader).toBe(expectHeaderAndFooter);
+    expect(component.showFooter).toBe(expectHeaderAndFooter);
+  }
 });

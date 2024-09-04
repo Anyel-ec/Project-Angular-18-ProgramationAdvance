@@ -1,7 +1,8 @@
+<!-- main-component.component.html -->
 <div class="card">
   <div class="table-header">
     <button class="btn_success" (click)="updateTable()">
-      <p-tag icon="pi pi-refresh" severity="secondary" value="Refrescar" />
+      <p-tag icon="pi pi-refresh" severity="secondary" value="Refrescar"></p-tag>
     </button>
   </div>
   <p-table
@@ -26,7 +27,6 @@
         </div>
       </div>
     </ng-template>
-
     <ng-template pTemplate="header">
       <tr style="text-align: center">
         <th pSortableColumn="cedula" scope="col">
@@ -48,7 +48,6 @@
         <th scope="col">Acciones</th>
       </tr>
     </ng-template>
-
     <ng-template pTemplate="body" let-rowData>
       <tr>
         <td style="text-align: center">{{ rowData.cedula }}</td>
@@ -79,7 +78,7 @@
             class="btn_success"
             (click)="reenviarEnlaceAlert(rowData)"
           >
-            <p-tag icon="pi pi-file-arrow-up" severity="info" />
+            <p-tag icon="pi pi-file-arrow-up" severity="info"></p-tag>
           </button>
         </td>
         <td style="text-align: center">
@@ -105,14 +104,12 @@
         <td style="text-align: center">
           <div *ngIf="rowData.estadoVerificacion === 'Pendiente'">
             <button class="btn_success" (click)="aceptar(rowData)">
-              <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
+              <p-tag icon="pi pi-check" severity="success" value="Aceptar"></p-tag>
             </button>
-
             <button class="btn_success" (click)="rechazar(rowData)">
-              <p-tag icon="pi pi-times" severity="danger" value="Rechazar" />
+              <p-tag icon="pi pi-times" severity="danger" value="Rechazar"></p-tag>
             </button>
           </div>
-
           <div
             *ngIf="
               rowData.estadoVerificacion === 'Aprobado' ||
@@ -125,16 +122,15 @@
               style="cursor: not-allowed"
               disabled
             >
-              <p-tag icon="pi pi-check" severity="success" value="Aceptar" />
+              <p-tag icon="pi pi-check" severity="success" value="Aceptar"></p-tag>
             </button>
-
             <button
               class="btn_success"
               (click)="rechazar(rowData)"
               style="cursor: not-allowed"
               disabled
             >
-              <p-tag icon="pi pi-times" severity="danger" value="Rechazar" />
+              <p-tag icon="pi pi-times" severity="danger" value="Rechazar"></p-tag>
             </button>
           </div>
         </td>
@@ -154,10 +150,7 @@
   <div class="dialog-content-center">
     <ng-container *ngIf="selectedDocument">
       <ng-container
-        *ngIf="
-          selectedDocument.typeDocument.startsWith('image/');
-          else pdfTemplate
-        "
+        *ngIf="selectedDocument.typeDocument.startsWith('image/'); else pdfTemplate"
       >
         <p-image
           [src]="selectedDocumentUrl"

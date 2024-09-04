@@ -33,7 +33,7 @@ export class EndProcessComponent implements OnInit {
   filteredData: VerifiDocument[] = [];
 
   Comprobante: boolean = false;
-  selectedDocumentUrl: SafeUrl | null = null;
+  selectedDocumentUrl: SafeUrl | undefined;
   selectedDocument: VerifiDocument | null = null;
 
   constructor(private VerifyDocumentService: VerifyDocumentService, private sanitizer: DomSanitizer) { }
@@ -106,6 +106,7 @@ export class EndProcessComponent implements OnInit {
     const base64Data = rowData.documento;
 
     if (this.isValidMimeType(mimeType) && this.isValidBase64(base64Data)) {
+      // Usa la URL solo si las validaciones pasan
       this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${mimeType};base64,${base64Data}`);
     } else {
       // Usar una URL segura por defecto o manejar el caso de error de otra manera
@@ -126,7 +127,7 @@ export class EndProcessComponent implements OnInit {
   // Método para validar datos Base64
   private isValidBase64(base64Data: string): boolean {
     const base64Pattern = /^[A-Za-z0-9+/=]+$/;
-    return base64Pattern.test(base64Data);
+    return base64Pattern.test(base64Data) && base64Data.length % 4 === 0;
   }
 
   updateVerifyData(id: string, updatedData: any): void {

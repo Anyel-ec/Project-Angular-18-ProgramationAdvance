@@ -43,6 +43,9 @@ registerLocaleData(localeEs, 'es', localeEsExtra);
   styleUrls: ['./registration-form.component.scss'],
 })
 export class RegistrationFormComponent implements OnInit {
+  onSubmit() {
+    throw new Error('Method not implemented.');
+  }
   form: FormGroup;
   provinces: any[] = [];
   genders: any[] = [];
@@ -223,8 +226,7 @@ export class RegistrationFormComponent implements OnInit {
       return { nombreInvalido: true };
     }
 
-    const expresionRegular =
-      /^[a-zA-ZÀ-ÿñÑáéíóú\s.'-]*$/;
+    const expresionRegular = /^[a-zA-Z\s.'-]+$/;
     if (expresionRegular.test(nombre)) {
       return null;
     } else {
@@ -384,7 +386,7 @@ export class RegistrationFormComponent implements OnInit {
   filterOnlyLetters(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(
-      /[^a-zA-ZÀ-ÿñÑáéíóú\s.'-]/g,
+      /^[a-zA-Z\s.'-]+$/g,
       ''
     );
   }

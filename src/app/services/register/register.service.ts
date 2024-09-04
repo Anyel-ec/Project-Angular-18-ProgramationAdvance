@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class RegisterService {
+  
   private baseUrl = 'http://34.127.73.228:3001/api/registers';
 
   constructor(private http: HttpClient) {}
