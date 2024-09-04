@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, NavigationEnd } from '@angular/router';
 import { AppComponent } from './app.component';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -18,15 +19,15 @@ describe('AppComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [AppComponent], // Usa 'declarations' para registrar el componente
+      declarations: [AppComponent],
       providers: [
         { provide: Router, useValue: routerStub }
-      ]
+      ],
+      imports: [RouterTestingModule] // Agregar RouterTestingModule si necesitas configurar rutas
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
   });
 
   it('should create the app', () => {
@@ -38,23 +39,21 @@ describe('AppComponent', () => {
   });
 
   it('should hide header and footer on login route', () => {
-    eventsSubject.next(new NavigationEnd(1, '/login', '/login'));
-    fixture.detectChanges();
-    expect(component.showHeader).toBeFalse();
-    expect(component.showFooter).toBeFalse();
+    testRouteVisibility('/login');
   });
 
   it('should hide header and footer on error-404 route', () => {
-    eventsSubject.next(new NavigationEnd(1, '/error-404', '/error-404'));
-    fixture.detectChanges();
-    expect(component.showHeader).toBeFalse();
-    expect(component.showFooter).toBeFalse();
+    testRouteVisibility('/error-404');
   });
 
   it('should handle upload-receipt route correctly', () => {
-    eventsSubject.next(new NavigationEnd(1, '/subir-recibo/123', '/subir-recibo/123'));
+    testRouteVisibility('/subir-recibo/123');
+  });
+
+  function testRouteVisibility(route: string) {
+    eventsSubject.next(new NavigationEnd(1, route, route));
     fixture.detectChanges();
     expect(component.showHeader).toBeFalse();
     expect(component.showFooter).toBeFalse();
-  });
+  }
 });
