@@ -5,7 +5,6 @@ import { NgModule } from '@angular/core';
 import { EndProcessComponent } from './views/admin/end-process/end-process.component';
 import { VerifyDataComponent } from './views/admin/verify-data/verify-data.component';
 import { LoginComponent } from './views/admin/login/login.component';
-import { Error404Component } from './errors/error-404/error-404.component';
 
 
 export const routes: Routes = [

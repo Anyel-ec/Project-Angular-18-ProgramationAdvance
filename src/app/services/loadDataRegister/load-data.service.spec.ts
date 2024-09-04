@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { LoadDataService } from './load-data.service';
 
 describe('LoadDataService', () => {
@@ -9,8 +9,10 @@ describe('LoadDataService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [LoadDataService]
+      providers: [
+        LoadDataService,
+        provideHttpClientTesting()
+      ],
     });
 
     service = TestBed.inject(LoadDataService);

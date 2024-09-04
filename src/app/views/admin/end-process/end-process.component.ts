@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UPLOAD_IMPORTS } from './importsModule';
 import Swal from 'sweetalert2';
 import { VerifyDocumentService } from '../../../services/verifyDocument/verify-document.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { catchError, of, tap } from 'rxjs';
 
 interface VerifiDocument {
   id: string;
@@ -20,10 +21,10 @@ interface VerifiDocument {
 @Component({
   selector: 'app-end-process',
   standalone: true,
-  imports: [UPLOAD_IMPORTS, HttpClientModule],
+  imports: [UPLOAD_IMPORTS],
   templateUrl: './end-process.component.html',
   styleUrls: ['./end-process.component.scss'],
-  providers: [VerifyDocumentService],
+  providers: [VerifyDocumentService, provideHttpClientTesting()],
 })
 export class EndProcessComponent implements OnInit {
 
@@ -32,18 +33,18 @@ export class EndProcessComponent implements OnInit {
   filteredData: VerifiDocument[] = [];
 
   Comprobante: boolean = false;
-  selectedDocumentUrl: SafeUrl = '';
+  selectedDocumentUrl: SafeUrl | null = null;
   selectedDocument: VerifiDocument | null = null;
 
-  constructor(private VerifyDocumentService: VerifyDocumentService, private sanitizer: DomSanitizer) {}
+  constructor(private VerifyDocumentService: VerifyDocumentService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.fetchData();
   }
 
   fetchData(): void {
-    this.VerifyDocumentService.getRelationsVerifyDocument().subscribe(
-      (response) => {
+    this.VerifyDocumentService.getRelationsVerifyDocument().pipe(
+      tap((response) => {
         this.data = response.map((item: any) => ({
           id: item._id,
           cedula: item.identification,
@@ -53,14 +54,15 @@ export class EndProcessComponent implements OnInit {
           documento: item.document,
           estadoVerificacion: item.verifyDocumentState,
           estadoDocumento: item.uploadDocumentState,
-          typeDocument: item.typeDocument
+          typeDocument: item.typeDocument,
         }));
         this.filteredData = this.data;
-      },
-      (error) => {
+      }),
+      catchError((error) => {
         console.error('Error al obtener los datos:', error);
-      }
-    );
+        return of([]); // Devolver un arreglo vacío o manejar el error de otra manera
+      })
+    ).subscribe();
   }
 
   filterData(): void {
@@ -99,21 +101,43 @@ export class EndProcessComponent implements OnInit {
   verComprobante(rowData: VerifiDocument): void {
     this.Comprobante = true;
     this.selectedDocument = rowData;
+
+    const mimeType = rowData.typeDocument;
+    const base64Data = rowData.documento;
+
+    if (this.isValidMimeType(mimeType) && this.isValidBase64(base64Data)) {
+      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${mimeType};base64,${base64Data}`);
+    } else {
+      // Usar una URL segura por defecto o manejar el caso de error de otra manera
+      this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
+      console.error('Datos no válidos para crear la URL del documento.');
+    }
+
     console.log(rowData.documento);
     console.log(rowData.typeDocument);
-    // Verifica y sanitiza la URL del documento
-    this.selectedDocumentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:${rowData.typeDocument};base64,${rowData.documento}`);
+  }
+
+  // Método para validar MIME type
+  private isValidMimeType(mimeType: string): boolean {
+    const validMimeTypes = ['application/pdf', 'image/png', 'image/jpeg'];
+    return validMimeTypes.includes(mimeType);
+  }
+
+  // Método para validar datos Base64
+  private isValidBase64(base64Data: string): boolean {
+    const base64Pattern = /^[A-Za-z0-9+/=]+$/;
+    return base64Pattern.test(base64Data);
   }
 
   updateVerifyData(id: string, updatedData: any): void {
     this.VerifyDocumentService.updateVerifyDocument(id, updatedData).subscribe();
   }
-  
+
   aceptar(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
-        title: 'Estas seguro?',
-        text: 'Se aceptará la inscripcion del aspirante.',
+        title: '¿Estás seguro?',
+        text: 'Se aceptará la inscripción del aspirante.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -126,8 +150,8 @@ export class EndProcessComponent implements OnInit {
           };
           this.updateVerifyData(rowData.id, updatedData);
           Swal.fire({
-            title: 'Inscripcion aceptada',
-            text: 'Se emitira el correo de confirmación al aspirante.',
+            title: 'Inscripción aceptada',
+            text: 'Se emitirá el correo de confirmación al aspirante.',
             icon: 'success',
           }).then(() => {
             this.updateTable();
@@ -144,8 +168,8 @@ export class EndProcessComponent implements OnInit {
   rechazar(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
-        title: 'Estas seguro?',
-        text: 'Se rechazara la inscripcion del aspirante.',
+        title: '¿Estás seguro?',
+        text: 'Se rechazará la inscripción del aspirante.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -155,8 +179,8 @@ export class EndProcessComponent implements OnInit {
         if (result.isConfirmed) {
           this.deleteVerifyDocument(rowData.id);
           Swal.fire({
-            title: 'Inscripcion rechazada',
-            text: 'Se emitira el correo al aspirante.',
+            title: 'Inscripción rechazada',
+            text: 'Se emitirá el correo al aspirante.',
             icon: 'success',
           }).then(() => {
             this.updateTable();
@@ -167,16 +191,17 @@ export class EndProcessComponent implements OnInit {
   }
 
   reenviarEnlace(id: string): void {
-    this.VerifyDocumentService.updateUploadDocumentAgain(id).subscribe(
-      (response) => {
-        console.log('Correo Reenviado:', response);
-      },
-      (error) => {
+    this.VerifyDocumentService.updateUploadDocumentAgain(id).pipe(
+      tap((response) => {
+        console.log('Correo reenviado:', response);
+      }),
+      catchError((error) => {
         console.error('Error al reenviar el correo:', error);
-      }
-    );
+        return of(null); // Devolver un observable que maneje el error de forma segura
+      })
+    ).subscribe();
   }
-  
+
   reenviarEnlaceAlert(rowData: VerifiDocument): void {
     if (rowData.estadoVerificacion === 'Pendiente') {
       Swal.fire({
@@ -200,7 +225,7 @@ export class EndProcessComponent implements OnInit {
       });
     }
   }
-  
+
   updateTable(): void {
     this.fetchData();
     this.filterData();

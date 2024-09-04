@@ -1,13 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RegistrationFormComponent } from './registration-form.component';
 import { LoadDataService } from '../../../services/loadDataRegister/load-data.service';
 import { RegisterService } from '../../../services/register/register.service';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
-import { FormControl } from '@angular/forms';
-import { Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 describe('RegistrationFormComponent additional tests', () => {
@@ -20,6 +18,7 @@ describe('RegistrationFormComponent additional tests', () => {
         LoadDataService,
         RegisterService,
         { provide: HttpClient, useValue: {} }, // Proporciona un mock de HttpClient
+        provideHttpClientTesting()
       ],
     });
 
@@ -27,6 +26,7 @@ describe('RegistrationFormComponent additional tests', () => {
     registerService = TestBed.inject(RegisterService);
     component = new RegistrationFormComponent(new FormBuilder(), loadDataService, registerService);
   });
+
   describe('ngOnInit method calls', () => {
     it('should call loadProvinces on ngOnInit', () => {
       const loadProvincesSpy = spyOn(component, 'loadProvinces').and.callThrough();
@@ -56,14 +56,14 @@ describe('RegistrationFormComponent additional tests', () => {
     });
 
     it('should handle error when loading genders fails', () => {
-      spyOn(loadDataService, 'getGender').and.returnValue(throwError('Error'));
+      spyOn(loadDataService, 'getGender').and.returnValue(throwError(() => new Error('Error')));
       const consoleSpy = spyOn(console, 'error');
       component.loadGenders();
       expect(consoleSpy).toHaveBeenCalledWith('Error fetching genders:', 'Error');
     });
   });
-  describe('RegistrationFormComponent - validarEdad', () => {
 
+  describe('RegistrationFormComponent - validarEdad', () => {
     it('should return edadInvalida when the control value is not a valid date', () => {
       const control = new FormControl('invalid-date'); // Usamos un valor que no es una fecha válida.
       const result = component.validarEdad(18, 50)(control);
@@ -87,9 +87,7 @@ describe('RegistrationFormComponent additional tests', () => {
       const result = component.validarEdad(18, 50)(control);
       expect(result).toEqual({ edadInvalida: true });
     });
-
   });
-
 
   describe('RegistrationFormComponent - loadCommandTypes', () => {
     it('should load command types on initialization', () => {
@@ -100,7 +98,7 @@ describe('RegistrationFormComponent additional tests', () => {
     });
 
     it('should handle error when loading command types fails', () => {
-      spyOn(loadDataService, 'getCommandType').and.returnValue(throwError('Error'));
+      spyOn(loadDataService, 'getCommandType').and.returnValue(throwError(() => new Error('Error')));
       const consoleSpy = spyOn(console, 'error');
       component.loadCommandTypes();
       expect(consoleSpy).toHaveBeenCalledWith('Error fetching command types:', 'Error');
@@ -216,7 +214,6 @@ describe('RegistrationFormComponent additional tests', () => {
   });
 
   describe('RegistrationFormComponent - validarNumeroCelular', () => {
-
     it('should return null when the control value is empty', () => {
       const control = new FormControl(''); // Valor vacío para simular un teléfono no ingresado
       const result = component.validarNumeroCelular(control);
@@ -240,12 +237,9 @@ describe('RegistrationFormComponent additional tests', () => {
       const result = component.validarNumeroCelular(control);
       expect(result).toBeNull();
     });
-
   });
 
-
   describe('RegistrationFormComponent - validarCorreoElectronico', () => {
-
     it('should return null for a valid email address', () => {
       const control = new FormControl('test@example.com'); // Email válido
       const result = component.validarCorreoElectronico(control);
@@ -269,11 +263,9 @@ describe('RegistrationFormComponent additional tests', () => {
       const result = component.validarCorreoElectronico(control);
       expect(result).toBeNull();
     });
-
   });
 
   describe('RegistrationFormComponent - validarNotaGrado', () => {
-
     it('should return null for a valid grade (between 0 and 20)', () => {
       const control = new FormControl(15); // Nota válida
       const result = component.validarNotaGrado(control);
@@ -303,12 +295,9 @@ describe('RegistrationFormComponent additional tests', () => {
       const result = component.validarNotaGrado(control);
       expect(result).toBeNull();
     });
-
   });
 
-
   describe('RegistrationFormComponent - validarNombreCompleto', () => {
-
     it('should return null for a valid name', () => {
       const control = new FormControl('Juan Pérez');
       const result = component.validarNombreCompleto(control);
@@ -338,11 +327,9 @@ describe('RegistrationFormComponent additional tests', () => {
       const result = component.validarNombreCompleto(control);
       expect(result).toEqual({ nombreInvalido: true });
     });
-
   });
 
   describe('RegistrationFormComponent - loadProvinces', () => {
-
     it('should load provinces on initialization', () => {
       const mockProvinces = [{ _id: '1', name: 'Pichincha' }];
       spyOn(loadDataService, 'getProvinces').and.returnValue(of({ data: mockProvinces }));
@@ -351,17 +338,14 @@ describe('RegistrationFormComponent additional tests', () => {
     });
 
     it('should handle error when loading provinces fails', () => {
-      spyOn(loadDataService, 'getProvinces').and.returnValue(throwError('Error'));
+      spyOn(loadDataService, 'getProvinces').and.returnValue(throwError(() => new Error('Error')));
       const consoleSpy = spyOn(console, 'error');
       component.loadProvinces();
       expect(consoleSpy).toHaveBeenCalledWith('Error fetching provinces:', 'Error');
     });
-
   });
 
-
   describe('RegistrationFormComponent - save method', () => {
-
     beforeEach(() => {
       // Configuración necesaria para los tests
       component.form = component.formBuilder.group({
@@ -376,66 +360,70 @@ describe('RegistrationFormComponent additional tests', () => {
     it('should call preventDefault and saveRegister when form is valid and gradeNote >= 14', () => {
       spyOn(component, 'saveRegister').and.callThrough();
       const event = jasmine.createSpyObj('event', ['preventDefault']);
-
       component.save(event);
-
       expect(event.preventDefault).toHaveBeenCalled();
       expect(component.saveRegister).toHaveBeenCalled();
     });
 
     it('should display a warning when gradeNote < 14', () => {
-      spyOn(Swal, 'fire');
-      component.form.get('gradeNote')!.setValue(13); // Nota menor que 14
-      const event = jasmine.createSpyObj('event', ['preventDefault']);
+      spyOn(Swal, 'fire').and.callThrough(); // Asegúrate de que Swal.fire se llama realmente
 
+      // Configura el valor de gradeNote en el formulario
+      component.form.get('gradeNote')!.setValue(13); // Nota menor que 14
+
+      // Llama al método que debería disparar la advertencia
+      const event = jasmine.createSpyObj('event', ['preventDefault']);
       component.save(event);
 
+      // Verifica que Swal.fire ha sido llamado con los parámetros esperados
       expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining({
         icon: 'warning',
         title: 'Nota Baja',
         text: 'La nota de grado es menor a 14. Los aspirantes deben tener un mínimo de 14 puntos para postularse.',
         confirmButtonText: 'Aceptar',
       }));
-
     });
 
     it('should mark all fields as touched when form is invalid', () => {
+      // Configura el valor de id_gender para que el formulario sea inválido
+      component.form.get('id_gender')!.setValue(''); // Asigna un valor inválido
+    
+      // Espía el método markAllAsTouched
+      spyOn(component.form, 'markAllAsTouched');
+    
+      // Llama al método save que debería marcar todos los campos como tocados
+      const event = jasmine.createSpyObj('event', ['preventDefault']);
+      component.save(event);
+    
+      // Verifica que markAllAsTouched haya sido llamado
+      expect(component.form.markAllAsTouched).toHaveBeenCalled();
+    });
+    
+
+    it('should mark all fields as touched when form is invalid', () => {
+      // Establece un valor que hace que el formulario sea inválido
       component.form.get('id_gender')!.setValue(''); // Hacemos que el formulario sea inválido
-      spyOn(component.form, 'markAllAsTouched');
-      const event = jasmine.createSpyObj('event', ['preventDefault']);
 
-      component.save(event);
-
-      expect(component.form.markAllAsTouched).toHaveBeenCalled();
-    });
-    it('should mark all fields as touched when form is invalid', () => {
-      // Hacemos que el formulario sea inválido estableciendo un valor inválido en un campo requerido.
-      component.form.get('id_gender')!.setValue(''); // Esto hará que el formulario sea inválido
-
-      // Espiamos el método 'markAllAsTouched' para verificar que se haya llamado.
+      // Espía en el método markAllAsTouched para verificar si se llama
       spyOn(component.form, 'markAllAsTouched');
 
+      // Crea un objeto de evento espía
       const event = jasmine.createSpyObj('event', ['preventDefault']);
 
+      // Llama al método que debería marcar todos los campos como tocados
       component.save(event);
 
-      // Verificamos que 'markAllAsTouched' se haya llamado.
+      // Verifica que markAllAsTouched ha sido llamado
       expect(component.form.markAllAsTouched).toHaveBeenCalled();
     });
-
-
   });
-
-
 
   it('should show a success alert and reset the form when the register is successfully saved', () => {
     const mockData = { message: 'Success' };
     spyOn(component['registerService'], 'createOrUpdateRegister').and.returnValue(of(mockData));
     const swalSpy = spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
     spyOn(component.form, 'reset');
-
     component.saveRegister({});
-
     expect(swalSpy).toHaveBeenCalledWith(jasmine.objectContaining({
       icon: 'success',
       title: 'Formulario Enviado',
@@ -447,12 +435,10 @@ describe('RegistrationFormComponent additional tests', () => {
 
   it('should show an error alert when the register fails to save', () => {
     const mockError = 'Error';
-    spyOn(component['registerService'], 'createOrUpdateRegister').and.returnValue(throwError(mockError));
+    spyOn(component['registerService'], 'createOrUpdateRegister').and.returnValue(throwError(() => new Error(mockError)));
     const consoleSpy = spyOn(console, 'error');
     const swalSpy = spyOn(Swal, 'fire');
-
     component.saveRegister({});
-
     expect(consoleSpy).toHaveBeenCalledWith('Error creating or updating register:', mockError);
     expect(swalSpy).toHaveBeenCalledWith(jasmine.objectContaining({
       icon: 'error',
@@ -462,10 +448,8 @@ describe('RegistrationFormComponent additional tests', () => {
     }));
   });
 
-
   describe('RegistrationFormComponent - resolved', () => {
     let component: RegistrationFormComponent;
-
     beforeEach(() => {
       component = new RegistrationFormComponent(new FormBuilder(), TestBed.inject(LoadDataService), TestBed.inject(RegisterService));
     });
@@ -485,11 +469,4 @@ describe('RegistrationFormComponent additional tests', () => {
       expect(component.captchaValid).toBeFalse();
     });
   });
-
-
-
-
-
-
-
 });

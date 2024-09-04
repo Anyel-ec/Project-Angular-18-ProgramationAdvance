@@ -12,10 +12,16 @@ describe('LoginComponent', () => {
   let loginServiceSpy: jasmine.SpyObj<LoginService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
+  // Constantes para las credenciales de prueba
+  const TEST_USERNAME = 'testuser';
+  const TEST_PASSWORD = 'testpass';
+  const MOCK_RESPONSE = { token: 'fake-token' };
+
+
   beforeEach(async () => {
     const loginService = jasmine.createSpyObj('LoginService', ['loginUser']);
     const router = jasmine.createSpyObj('Router', ['navigate']);
-    
+
     await TestBed.configureTestingModule({
       imports: [LoginComponent],  // Importa el componente standalone aquí
       providers: [
@@ -55,23 +61,27 @@ describe('LoginComponent', () => {
   });
 
   it('debería llamar a loginUser y redirigir al usuario si el formulario es válido y la respuesta es exitosa', () => {
-    const mockResponse = { token: 'fake-token' };
-    loginServiceSpy.loginUser.and.returnValue(of(mockResponse));
+    // Configura el espía para devolver la respuesta simulada
+    loginServiceSpy.loginUser.and.returnValue(of(MOCK_RESPONSE));
+    // Espía para la consola y la navegación
     spyOn(console, 'log');
     spyOn(routerSpy, 'navigate');
-    
-    component.loginForm.setValue({ username: 'testuser', password: 'testpass' });
+    // Establece los valores en el formulario usando las constantes
+    component.loginForm.setValue({ username: TEST_USERNAME, password: TEST_PASSWORD });
+    // Llama al método onSubmit
     component.onSubmit();
-    
-    expect(loginServiceSpy.loginUser).toHaveBeenCalledWith({ usernameOrEmail: 'testuser', password: 'testpass' });
+    // Verifica que el método loginUser ha sido llamado con los parámetros correctos
+    expect(loginServiceSpy.loginUser).toHaveBeenCalledWith({ usernameOrEmail: TEST_USERNAME, password: TEST_PASSWORD });
+    // Verifica que se ha llamado a navigate con la ruta correcta
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/verificar-registros']);
-    expect(console.log).toHaveBeenCalledWith('testuser', 'testpass', "Proyecto");
+    // Verifica que console.log ha sido llamado con los valores correctos
+    expect(console.log).toHaveBeenCalledWith(TEST_USERNAME, TEST_PASSWORD, "Proyecto");
   });
 
   it('debería mostrar un error y resetear el formulario si loginUser falla', () => {
     const errorResponse = new Error('Login failed');
-    loginServiceSpy.loginUser.and.returnValue(throwError(errorResponse));
-    
+    loginServiceSpy.loginUser.and.returnValue(throwError(() => errorResponse));
+
     spyOn(Swal, 'fire').and.callFake(() => {
       return Promise.resolve({
         isConfirmed: false,
@@ -79,18 +89,18 @@ describe('LoginComponent', () => {
         isDismissed: true
       });
     });
-  
-    component.loginForm.setValue({ username: 'testuser', password: 'testpass' });
+
+    component.loginForm.setValue({ username: TEST_USERNAME, password: TEST_PASSWORD });
     component.onSubmit();
-  
+
     const expectedSwalOptions = {
       icon: 'error',
       title: 'Datos incorrectos',
       text: 'Los datos ingresados no son correctos'
     };
-  
+
     expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining(expectedSwalOptions));
     expect(component.loginForm.value).toEqual({ username: '', password: '' });
   });
-  
+
 });

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ApiConfigService } from '../api-Config-Service';
 import { VerifyDocumentService } from './verify-document.service';
 
@@ -13,22 +13,21 @@ describe('VerifyDocumentService', () => {
     spy.getBaseUrl.and.returnValue('http://34.127.73.228:3001/'); // URL base de prueba
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
         VerifyDocumentService,
-        { provide: ApiConfigService, useValue: spy }
+        { provide: ApiConfigService, useValue: spy },
+        provideHttpClientTesting()
       ]
     });
 
     service = TestBed.inject(VerifyDocumentService);
     httpMock = TestBed.inject(HttpTestingController);
-    apiConfigServiceSpy = TestBed.inject(ApiConfigService) as jasmine.SpyObj<ApiConfigService>;
   });
 
   afterEach(() => {
     httpMock.verify();
   });
-  
+
   it('should return expected data from getRelationsVerifyDocument', () => {
     const dummyData = [
       {

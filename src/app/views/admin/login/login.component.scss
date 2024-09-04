@@ -11,6 +11,8 @@
   display: block;
   color: red;
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 12px;
 }
 
 .main {
@@ -51,14 +53,6 @@
   display: block; 
   text-align: center;
   font-family: "Ubuntu", sans-serif;
-}
-
-.error-message {
-  display: block;
-  color: red;
-  text-align: center;
-  margin-top: 5px;
-  margin-bottom: 12px;
 }
 
 .un.ng-invalid.ng-touched {

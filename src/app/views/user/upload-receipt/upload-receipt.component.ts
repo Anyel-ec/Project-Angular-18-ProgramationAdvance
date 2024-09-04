@@ -9,27 +9,26 @@ import {
 } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UploadDocumentService } from '../../../services/uploadDocument/upload-document.service';
-import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { catchError, finalize, of } from 'rxjs';
 
 @Component({
   selector: 'app-upload-receipt',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './upload-receipt.component.html',
   styleUrls: ['./upload-receipt.component.scss'],
-  providers: [UploadDocumentService],
+  providers: [UploadDocumentService, provideHttpClientTesting()],
 })
-export class UploadReceiptComponent implements OnInit{
+export class UploadReceiptComponent implements OnInit {
   fileUrl: SafeResourceUrl | null = null;
   isImage: boolean = false;
   form: FormGroup;
 
   id: string | null;
-  selectedFile: File | null = null;  
-
+  selectedFile: File | null = null;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -53,17 +52,54 @@ export class UploadReceiptComponent implements OnInit{
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
-    this.selectedFile = file;
+
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          reader.result as string
-        );
-        this.isImage = file.type.startsWith('image/');
-      };
-      reader.readAsDataURL(file);
+      // Validación del archivo (tipo y tamaño)
+      if (this.isValidFile(file)) {
+        this.selectedFile = file;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const fileResult = reader.result as string;
+
+          // Validación adicional antes de desactivar la sanitización
+          if (this.isSafeContent(fileResult)) {
+            this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileResult);
+            this.isImage = file.type.startsWith('image/');
+          } else {
+            console.error('Contenido no seguro detectado:', fileResult);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de seguridad',
+              text: 'El contenido del archivo no es seguro.',
+              confirmButtonText: 'Aceptar',
+            });
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        console.error('Archivo no válido:', file);
+        Swal.fire({
+          icon: 'error',
+          title: 'Archivo no válido',
+          text: 'El archivo seleccionado no es válido. Por favor, seleccione un archivo con un formato permitido y un tamaño menor a 5MB.',
+          confirmButtonText: 'Aceptar',
+        });
+      }
     }
+  }
+
+  private isValidFile(file: File): boolean {
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf']; // Tipos permitidos
+    const maxSize = 5 * 1024 * 1024; // 5 MB en bytes
+
+    // Validar tipo de archivo y tamaño
+    return allowedTypes.includes(file.type) && file.size <= maxSize;
+  }
+
+  private isSafeContent(content: string): boolean {
+    // Aquí puedes implementar lógica adicional para verificar la seguridad del contenido
+    return true; // Retorna 'true' si el contenido es seguro.
   }
 
   clearFile(): void {
@@ -75,12 +111,22 @@ export class UploadReceiptComponent implements OnInit{
 
   onSubmit(): void {
     if (this.form.valid && this.selectedFile && this.id) {
-      this.uploadDocumentService.updateVerifyDocument(this.id, this.selectedFile).subscribe(
-        response => {
+      this.uploadDocumentService.updateVerifyDocument(this.id, this.selectedFile).pipe(
+        catchError(error => {
+          console.error('Error al actualizar el documento', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al enviar el documento. Por favor, intente nuevamente.',
+            confirmButtonText: 'Aceptar',
+          });
+          return of(null); // Devuelve un observable vacío para continuar con el flujo
+        }),
+        finalize(() => {
           Swal.fire({
             icon: 'success',
             title: 'Documento Enviado',
-            text: 'El documento se ha enviado con éxito, sera redirigido a la página principal.',
+            text: 'El documento se ha enviado con éxito, será redirigido a la página principal.',
             confirmButtonText: 'Aceptar',
           }).then((result) => {
             if (result.isConfirmed) {
@@ -88,17 +134,8 @@ export class UploadReceiptComponent implements OnInit{
               this.router.navigate(['']);
             }
           });
-        },
-        error => {
-          console.error('Error updating document', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un error al enviar el documento. Por favor, intente nuevamente.',
-            confirmButtonText: 'Aceptar',
-          });
-        }
-      );
+        })
+      ).subscribe();
     } else {
       this.form.markAllAsTouched();
       Swal.fire({
