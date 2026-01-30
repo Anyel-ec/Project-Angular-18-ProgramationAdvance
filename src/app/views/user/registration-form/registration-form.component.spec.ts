@@ -369,7 +369,7 @@ describe('RegistrationFormComponent additional tests', () => {
       spyOn(Swal, 'fire').and.callThrough(); // Asegúrate de que Swal.fire se llama realmente
 
       // Configura el valor de gradeNote en el formulario
-      component.form.get('gradeNote')!.setValue(13); // Nota menor que 14
+      component.form.get('gradeNote')?.setValue(13); // Nota menor que 14
 
       // Llama al método que debería disparar la advertencia
       const event = jasmine.createSpyObj('event', ['preventDefault']);
@@ -386,23 +386,22 @@ describe('RegistrationFormComponent additional tests', () => {
 
     it('should mark all fields as touched when form is invalid', () => {
       // Configura el valor de id_gender para que el formulario sea inválido
-      component.form.get('id_gender')!.setValue(''); // Asigna un valor inválido
-    
+      component.form.get('id_gender')?.setValue(''); // Asigna un valor inválido
+
       // Espía el método markAllAsTouched
       spyOn(component.form, 'markAllAsTouched');
-    
+
       // Llama al método save que debería marcar todos los campos como tocados
       const event = jasmine.createSpyObj('event', ['preventDefault']);
       component.save(event);
-    
+
       // Verifica que markAllAsTouched haya sido llamado
       expect(component.form.markAllAsTouched).toHaveBeenCalled();
     });
-    
 
     it('should mark all fields as touched when form is invalid', () => {
       // Establece un valor que hace que el formulario sea inválido
-      component.form.get('id_gender')!.setValue(''); // Hacemos que el formulario sea inválido
+      component.form.get('id_gender')?.setValue(''); // Hacemos que el formulario sea inválido
 
       // Espía en el método markAllAsTouched para verificar si se llama
       spyOn(component.form, 'markAllAsTouched');

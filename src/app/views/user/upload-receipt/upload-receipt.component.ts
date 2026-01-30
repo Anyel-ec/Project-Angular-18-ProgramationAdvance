@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UploadDocumentService } from '../../../services/uploadDocument/upload-document.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { catchError, finalize, of } from 'rxjs';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-upload-receipt',
@@ -98,8 +99,10 @@ export class UploadReceiptComponent implements OnInit {
   }
 
   private isSafeContent(content: string): boolean {
-    // Aquí puedes implementar lógica adicional para verificar la seguridad del contenido
-    return true; // Retorna 'true' si el contenido es seguro.
+    // Sanitizar el contenido usando DOMPurify
+    const sanitizedContent = DOMPurify.sanitize(content);
+    // Comprobar si el contenido original y el sanitizado son iguales
+    return content === sanitizedContent;
   }
 
   clearFile(): void {
